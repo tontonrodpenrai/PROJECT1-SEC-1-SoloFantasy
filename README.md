@@ -1,4 +1,4 @@
-# PROJECT1-SEC-X-ProjectName
+# PROJECT1-SEC-X-Solo Fantasy
 | รหัสนักศึกษา | GitHub Username | Week#1 | Week#2 | Week#3 | Week#4 | Week#5 |
 | :---       	| :---            | :---   | :---   | :---   | :---   | :---   |
 | `65130500019` | Jy98Prem2547 | เสนอเกมที่จะทำ,คิด idea เกม turn base
