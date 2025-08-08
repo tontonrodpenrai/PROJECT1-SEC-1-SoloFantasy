@@ -1,4 +1,4 @@
-# PROJECT1-SEC-X-Solo Fantasy
+# PROJECT1-SEC-1-Solo Fantasy
 | รหัสนักศึกษา    | ชื่อ               | GitHub Username | Week#1 | Week#2 | Week#3 | Week#4 | Week#5 |
 | :---       	  | :---              | :---            | :--- | :---   | :---   | :---   | :---   |
 | `65130500019` | ณัฐภัทร ถาวร        | Jy98Prem2547    | เสนอเกมที่จะทำ,คิด idea เกม turn base |
