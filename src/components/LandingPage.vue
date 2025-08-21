@@ -14,8 +14,8 @@
     <div class="text-center" style="width: 500px; height: 250px;">
       <h1 class="press-start-2p-regular text-white text-6xl mb-4" style="width: 500px;">Solo</h1>
       <h1 class="press-start-2p-regular text-white text-6xl">Fantasy</h1>
-      <div class="" style="margin-top: 50px;">
-        <router-link :to="{ name: 'SelectCharacter' }" class="">
+      <div style="margin-top: 50px;">
+        <router-link :to="{ name: 'SelectCharacterPage' }">
           <button class="cursor-pointer">
             <img
               src="/All Element/playButton-1.2.png"

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LandingPage from "@/components/LandingPage.vue";
-import SelectCharacter from "@/components/SelectCharacter.vue";
+import SelectCharacterPage from "@/components/SelectCharacterPage.vue";
 const history = createWebHistory('/solofastasy/');
 const routes = [
   {
@@ -10,8 +10,8 @@ const routes = [
   },
   {
     path: "/selectCharacter",
-    name: "SelectCharacter",
-    component: SelectCharacter,
+    name: "SelectCharacterPage",
+    component: SelectCharacterPage,
   },
 ];
 
