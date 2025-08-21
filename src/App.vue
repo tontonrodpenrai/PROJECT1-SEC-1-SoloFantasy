@@ -67,7 +67,8 @@ const confirmSelection = () => {
         padding-right: 710px;
       "
     >
-      <div class="text-center" style="width: 500px; height: 250px">
+    <div class="bg-white/25 rounded-md ">
+      <div class="text-center" style="width: 500px; height: 250px" >
         <h1
           class="press-start-2p-regular text-white text-6xl mb-4"
           style="width: 500px"
@@ -90,6 +91,7 @@ const confirmSelection = () => {
           </button>
         </div>
       </div>
+      </div>
     </div>
   </div>
 
@@ -103,12 +105,14 @@ const confirmSelection = () => {
       "
     >
       <button @click="goToHome" class="back-button absolute top-4 left-4 z-20">
-        ← Back
+        <img src="/All Element/back.png" 
+        style="transform: scale(2)"
+        />
       </button>
 
       <h1
-        class="press-start-2p text-yellow-300 text-4xl md:text-6xl relative z-10 drop-shadow-lg"
-        style="width: 960px; margin-bottom: 100px"
+        class="press-start-2p text-white text-4xl md:text-6xl relative z-10 drop-shadow-lg"
+        style="width: 960px; margin-bottom: 50px"
       >
         Select Character
       </h1>
@@ -144,7 +148,7 @@ const confirmSelection = () => {
 
           <div
             style="
-              background: rgba(255, 255, 255, 0.7);
+              background: rgba(255, 255, 255, 1);
               border-radius: 8px;
               padding: 12px;
               border: 2px solid #444;
@@ -202,17 +206,16 @@ const confirmSelection = () => {
 }
 
 .character-card {
-  width: 250px;
+  width: 300px;
   background: linear-gradient(145deg, #000000);
-  border-radius: 12px;
-  padding: 12px;
+  padding: 5px;
   transform: translateY(0);
   margin-left: 50px;
 }
 
 .character-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgb(255, 0, 242), inset 0 2px 14px rgb(255, 0, 234);
+  box-shadow: 0 12px 24px rgb(255, 255, 255), inset 0 2px 14px rgb(255, 255, 255);
 }
 
 .character-card.selected-knight {
