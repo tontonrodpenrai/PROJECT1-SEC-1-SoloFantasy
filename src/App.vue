@@ -13,7 +13,7 @@ const characters = [
     sta: 100,
     atk: 35,
     skill: 50,
-    picture: "/Character/SwordMan/pixcel.png",
+    picture: "/src/assets/images/Character/knight.png",
   },
   {
     class: "archer",
@@ -22,7 +22,7 @@ const characters = [
     sta: 150,
     atk: 45,
     skill: 80,
-    picture: "/Character/Archer/pixcel.png",
+    picture: "/src/assets/images/Character/archer.png",
   },
   {
     class: "mage",
@@ -31,7 +31,7 @@ const characters = [
     sta: 200,
     atk: 15,
     skill: 100,
-    picture: "/Character/Mage/pixcel.png",
+    picture: "/src/assets/images/Character/magician.png",
   },
 ];
 
@@ -42,6 +42,14 @@ const goToSelectCharacter = () => {
 const goToHome = () => {
   currentPage.value = "home";
   selectedCharacter.value = null;
+};
+
+const goToSettings = () => {
+  currentPage.value = "settings";
+};
+
+const goTocurrentPage = () => {
+  currentPage.value = "settings";
 };
 
 const selectCharacter = (character) => {
@@ -61,37 +69,44 @@ const goToGamePlay = () => {
     <div
       class="bg-cover bg-center bg-no-repeat relative"
       style="
-        background-image: url('/Bg/homePageBG.jpg');
+        background-image: url('/src/assets/images/bg/homePageBG.jpg');
         padding-top: 350px;
         padding-bottom: 352px;
         padding-left: 702px;
         padding-right: 710px;
       "
     >
-    <div class="bg-white/25 rounded-md ">
-      <div class="text-center" style="width: 500px; height: 250px" >
-        <h1
-          class="press-start-2p-regular text-white text-6xl mb-4"
-          style="width: 500px"
-        >
-          Solo
-        </h1>
-        <h1 class="press-start-2p-regular text-white text-6xl">Fantasy</h1>
-        <div style="margin-top: 50px">
-          <button @click="goToSelectCharacter" class="cursor-pointer">
-            <img
-              src="/All Element/playButton.png"
-              style="transform: scale(3)"
-            />
-          </button>
-          <button class="cursor-pointer" style="margin-left: 200px">
-            <img
-              src="/All Element/Tutorial.png"
-              style="transform: scale(3)"
-            />
-          </button>
+      <!-- ปุ่ม Settings Button -->
+      <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
+        <img src="/src/assets/images/element/setting.png" 
+        style="transform: scale(2)"
+        />
+      </button>
+
+      <div class="bg-white/25 rounded-md ">
+        <div class="text-center" style="width: 500px; height: 250px" >
+          <h1
+            class="press-start-2p-regular text-white text-6xl mb-4"
+            style="width: 500px"
+          >
+            Solo
+          </h1>
+          <h1 class="press-start-2p-regular text-white text-6xl">Fantasy</h1>
+          <div style="margin-top: 50px">
+            <button @click="goToSelectCharacter" class="cursor-pointer">
+              <img
+                src="/src/assets/images/element/playButton.png"
+                style="transform: scale(3)"
+              />
+            </button>
+            <button class="cursor-pointer" style="margin-left: 200px">
+              <img
+                src="/src/assets/images/element/Tutorial.png"
+                style="transform: scale(3)"
+              />
+            </button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -100,13 +115,20 @@ const goToGamePlay = () => {
     <div
       class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
       style="
-        background-image: url('/Bg/selectCharacterBG.png');
+        background-image: url('/src/assets/images/bg/selectCharacterBG.png');
         padding-left: 429px;
         padding-right: 523px;
       "
       >
       <button @click="goToHome" class="back-button absolute top-4 left-4 z-20">
-        <img src="/All Element/back.png" 
+        <img src="/src/assets/images/element/back.png" 
+        style="transform: scale(2)"
+        />
+      </button>
+
+      <!-- หน้าSettings Button -->
+      <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
+        <img src="/src/assets/images/element/setting.png" 
         style="transform: scale(2)"
         />
       </button>
@@ -195,11 +217,75 @@ const goToGamePlay = () => {
     </div>
   </div>
 
-  <div v-if="currentPage === 'gamePlay'" class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url(/public/Bg/gamePlayBG.jpg)]">
-     <div class="absolute inset-0 bg-black/25">
+  <div v-if="currentPage === 'settings'">
+    <div
+      class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
+      style="
+        background-image: url('/src/assets/images/bg/selectCharacterBG.png');
+      "
+    >
+    <!-- จัดหน้าปุ่มSetting -->
+      <div class="settings-panel-container relative flex items-center justify-center">
+      <img 
+          src="/src/assets/images/element/settingBox.png" 
+          class="settings-box-bg w-[280px] h-[320px] object-contain"
+        /> 
+        <div class="settings-content absolute inset-0 flex flex-col items-center justify-center">
+          <h1 class="press-start-2p text-white text-3xl text-center mb-10 ">
+            Setting
+          </h1>
+
+        <div class="flex flex-col items-center gap-4 ">
+          <!-- เพิ่ม Home Button -->
+          <button @click="goToHome" class="setting-icon-button">
+            <div class="icon-frame ">
+              <div class="icon-content home-icon">
+                <img src="/src/assets/images/element/home.png" 
+                style="transform: scale(2)"
+                />
+              </div>
+            </div>
+          </button>
+
+          <!-- ปุ่ม Continue -->
+          <button class="setting-icon-button">
+            <button @click="goTocurrentPage" class="setting-icon-button"></button>
+            <div class="icon-frame">
+              <div class="icon-content play-icon">
+                <img src="/src/assets/images/element/playButton.png"
+                style="transform: scale(2)"
+                />
+              </div>
+            </div>
+          </button>
+
+          <!-- Play Button -->
+          <button @click="goToSelectCharacter" class="setting-icon-button">
+            <div class="icon-frame">
+              <div class="icon-content replay-icon">
+                <img src="/src/assets/images/element/playAgain.png"
+                style="transform: scale(2)"
+                />
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  
+    <div v-if="currentPage === 'gamePlay'" class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url(/public/Bg/gamePlayBG.jpg)]">
+       <div class="absolute inset-0 bg-black/25">
+        <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
+          <img src="/src/assets/images/element/setting.png" 
+          style="transform: scale(1.5)"
+          />
+        </button>
+
       <div class="relative w-[350px] h-[100px]">
         <img src="/src/assets/images/element/boxHpAndSta.png" class="w-full h-full">
-        <div class="absolue w-[200px] h-90px">
+        <div class="absolute w-[200px] h-90px">
             <p>{{  }}</p>
         </div>
       </div>
@@ -300,5 +386,70 @@ const goToGamePlay = () => {
   background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
   border-color: #ffd700;
   transform: translateY(-2px);
+}
+
+.settings-button {
+  font-family: "Press Start 2P", system-ui;
+  color: #ffd700;
+  background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
+  border: 2px solid #666;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.settings-button:hover {
+  background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
+  border-color: #ffd700;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.settings-panel {
+  width: 300px;
+  background: #8B4513;
+  border: 8px solid #654321;
+  box-shadow: 
+    inset 0 0 10px rgba(0,0,0,0.5),
+    0 0 20px rgba(0,0,0,0.3);
+}
+
+.setting-icon-button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.setting-icon-button:hover {
+  transform: scale(1.1);
+}
+
+.setting-icon-button:active {
+  transform: scale(0.95);
+}
+
+
+.icon-content {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+.home-icon {
+  margin-top: 6px;
+}
+
+.play-icon {
+  margin-bottom: 5px;
+}
+
+.replay-icon {
+  margin-top: 2px;
 }
 </style>
