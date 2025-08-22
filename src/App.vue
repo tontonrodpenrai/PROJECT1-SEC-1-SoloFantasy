@@ -13,7 +13,7 @@ const characters = [
     sta: 100,
     atk: 35,
     skill: 50,
-    picture: "/Character/SwordMan/pixcel.png",
+    picture: "/src/assets/images/character/knight.png",
   },
   {
     class: "archer",
@@ -22,7 +22,7 @@ const characters = [
     sta: 150,
     atk: 45,
     skill: 80,
-    picture: "/Character/Archer/pixcel.png",
+    picture: "/src/assets/images/character/archer.png",
   },
   {
     class: "mage",
@@ -31,7 +31,7 @@ const characters = [
     sta: 200,
     atk: 15,
     skill: 100,
-    picture: "/Character/Mage/pixcel.png",
+    picture: "/src/assets/images/character/magician.png",
   },
 ];
 
@@ -61,7 +61,7 @@ const goToGamePlay = () => {
     <div
       class="bg-cover bg-center bg-no-repeat relative"
       style="
-        background-image: url('/Bg/homePageBG.jpg');
+        background-image: url('/src/assets/images/bg/homePageBG.jpg');
         padding-top: 350px;
         padding-bottom: 352px;
         padding-left: 702px;
@@ -80,13 +80,13 @@ const goToGamePlay = () => {
         <div style="margin-top: 50px">
           <button @click="goToSelectCharacter" class="cursor-pointer">
             <img
-              src="/All Element/playButton.png"
+              src="/src/assets/images/element/playButton.png"
               style="transform: scale(3)"
             />
           </button>
           <button class="cursor-pointer" style="margin-left: 200px">
             <img
-              src="/All Element/Tutorial.png"
+              src="/src/assets/images/element/Tutorial.png"
               style="transform: scale(3)"
             />
           </button>
@@ -100,13 +100,13 @@ const goToGamePlay = () => {
     <div
       class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
       style="
-        background-image: url('/Bg/selectCharacterBG.png');
+        background-image: url('/src/assets/images/bg/selectCharacterBG.png');
         padding-left: 429px;
         padding-right: 523px;
       "
       >
       <button @click="goToHome" class="back-button absolute top-4 left-4 z-20">
-        <img src="/All Element/back.png" 
+        <img src="./assets/images/element/back.png" 
         style="transform: scale(2)"
         />
       </button>
