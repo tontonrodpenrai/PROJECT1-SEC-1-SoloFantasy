@@ -10,7 +10,7 @@ const characters = [
     class: "knight",
     name: "The Knight",
     hp: 240,
-    str: 100,
+    sta: 100,
     atk: 35,
     skill: 50,
     picture: "/Character/SwordMan/pixcel.png",
@@ -19,7 +19,7 @@ const characters = [
     class: "archer",
     name: "The Archer",
     hp: 180,
-    str: 150,
+    sta: 150,
     atk: 45,
     skill: 80,
     picture: "/Character/Archer/pixcel.png",
@@ -28,7 +28,7 @@ const characters = [
     class: "mage",
     name: "The Magician",
     hp: 200,
-    str: 200,
+    sta: 200,
     atk: 15,
     skill: 100,
     picture: "/Character/Mage/pixcel.png",
@@ -48,11 +48,12 @@ const selectCharacter = (character) => {
   selectedCharacter.value = character;
 };
 
-const confirmSelection = () => {
+const goToGamePlay = () => {
   if (selectedCharacter.value) {
-    alert(`Selected: ${selectedCharacter.value.name}`);
+    currentPage.value = "gamePlay"
   }
 };
+
 </script>
 
 <template>
@@ -60,7 +61,7 @@ const confirmSelection = () => {
     <div
       class="bg-cover bg-center bg-no-repeat relative"
       style="
-        background-image: url('/Bg/wallpapersden.com_fantasy-castle-pixel-art_1920x1081.jpg');
+        background-image: url('/Bg/homePageBG.jpg');
         padding-top: 350px;
         padding-bottom: 352px;
         padding-left: 702px;
@@ -79,13 +80,13 @@ const confirmSelection = () => {
         <div style="margin-top: 50px">
           <button @click="goToSelectCharacter" class="cursor-pointer">
             <img
-              src="/All Element/playButton-1.2.png"
+              src="/All Element/playButton.png"
               style="transform: scale(3)"
             />
           </button>
           <button class="cursor-pointer" style="margin-left: 200px">
             <img
-              src="/All Element/Tutorial-1.2.png"
+              src="/All Element/Tutorial.png"
               style="transform: scale(3)"
             />
           </button>
@@ -99,11 +100,11 @@ const confirmSelection = () => {
     <div
       class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
       style="
-        background-image: url('/Bg/VD8xY6.png');
+        background-image: url('/Bg/selectCharacterBG.png');
         padding-left: 429px;
         padding-right: 523px;
       "
-    >
+      >
       <button @click="goToHome" class="back-button absolute top-4 left-4 z-20">
         <img src="/All Element/back.png" 
         style="transform: scale(2)"
@@ -166,8 +167,8 @@ const confirmSelection = () => {
                 <span class="text-black">{{ character.hp }}</span>
               </div>
               <div class="stat-row">
-                <span class="text-blue-500">STR</span>
-                <span class="text-black">{{ character.str }}</span>
+                <span class="text-blue-500">STA</span>
+                <span class="text-black">{{ character.sta }}</span>
               </div>
               <div class="stat-row">
                 <span class="text-blue-500">ATK</span>
@@ -184,7 +185,7 @@ const confirmSelection = () => {
 
       <div class="text-center" style="margin-top: 100px">
         <button
-          @click="confirmSelection"
+          @click="goToGamePlay"
           :disabled="!selectedCharacter"
           class="select-button relative z-10"
         >
@@ -192,6 +193,17 @@ const confirmSelection = () => {
         </button>
       </div>
     </div>
+  </div>
+
+  <div v-if="currentPage === 'gamePlay'" class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url(/public/Bg/gamePlayBG.jpg)]">
+     <div class="absolute inset-0 bg-black/25">
+      <div class="relative w-[350px] h-[100px]">
+        <img src="/src/assets/images/element/boxHpAndSta.png" class="w-full h-full">
+        <div class="absolue w-[200px] h-90px">
+            <p>{{  }}</p>
+        </div>
+      </div>
+     </div>
   </div>
 </template>
 
