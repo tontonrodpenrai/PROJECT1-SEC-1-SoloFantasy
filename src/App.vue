@@ -2,6 +2,7 @@
 import { ref } from "vue";
 
 const currentPage = ref("home");
+const previousPage = ref(null);
 
 const selectedCharacter = ref(null);
 
@@ -35,21 +36,28 @@ const characters = [
   },
 ];
 
+
+const goToHome = () => {
+  currentPage.value = "home";
+  pageHistory.value = [];
+  selectedCharacter.value = null;
+};
+
 const goToSelectCharacter = () => {
   currentPage.value = "selectCharacter";
 };
 
-const goToHome = () => {
-  currentPage.value = "home";
-  selectedCharacter.value = null;
-};
-
 const goToSettings = () => {
+  previousPage.value = currentPage.value;
   currentPage.value = "settings";
 };
 
-const goTocurrentPage = () => {
-  currentPage.value = "settings";
+const resumeGame = () => {
+  if (previousPage.value) {
+    currentPage.value = previousPage.value; 
+  } else {
+    currentPage.value = "home"; 
+  }
 };
 
 const selectCharacter = (character) => {
@@ -247,9 +255,8 @@ const goToGamePlay = () => {
             </div>
           </button>
 
-          <!-- ปุ่ม Continue -->
-          <button class="setting-icon-button">
-            <button @click="goTocurrentPage" class="setting-icon-button"></button>
+          <!-- ปุ่ม Resume -->
+          <button @click="resumeGame" class="setting-icon-button">
             <div class="icon-frame">
               <div class="icon-content play-icon">
                 <img src="/src/assets/images/element/playButton.png"
@@ -442,14 +449,16 @@ const goToGamePlay = () => {
 }
 
 .home-icon {
-  margin-top: 6px;
+  margin-top: 3px;
 }
 
 .play-icon {
-  margin-bottom: 5px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 .replay-icon {
-  margin-top: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 </style>
