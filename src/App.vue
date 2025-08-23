@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 const currentPage = ref("home");
-const previousPage = ref(null);
+const showSettings = ref(false);
 
 const selectedCharacter = ref(null);
 
@@ -36,28 +36,20 @@ const characters = [
   },
 ];
 
-
+//ไปหน้าหลัก
 const goToHome = () => {
   currentPage.value = "home";
-  pageHistory.value = [];
   selectedCharacter.value = null;
+  showSettings.value = false;
 };
 
 const goToSelectCharacter = () => {
   currentPage.value = "selectCharacter";
+  showSettings.value = false;
 };
 
-const goToSettings = () => {
-  previousPage.value = currentPage.value;
-  currentPage.value = "settings";
-};
-
-const resumeGame = () => {
-  if (previousPage.value) {
-    currentPage.value = previousPage.value; 
-  } else {
-    currentPage.value = "home"; 
-  }
+const toggleSettings = () => {
+  showSettings.value = !showSettings.value;
 };
 
 const selectCharacter = (character) => {
@@ -66,10 +58,10 @@ const selectCharacter = (character) => {
 
 const goToGamePlay = () => {
   if (selectedCharacter.value) {
-    currentPage.value = "gamePlay"
+    currentPage.value = "gamePlay";
+    showSettings.value = false;
   }
 };
-
 </script>
 
 <template>
@@ -84,13 +76,6 @@ const goToGamePlay = () => {
         padding-right: 710px;
       "
     >
-      <!-- ปุ่ม Settings Button -->
-      <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
-        <img src="/src/assets/images/element/setting.png" 
-        style="transform: scale(2)"
-        />
-      </button>
-
       <div class="bg-white/25 rounded-md ">
         <div class="text-center" style="width: 500px; height: 250px" >
           <h1
@@ -118,8 +103,8 @@ const goToGamePlay = () => {
       </div>
     </div>
   </div>
-
-  <div v-if="currentPage === 'selectCharacter'">
+//Setting หน้าตัวละคร
+  <div v-if="currentPage === 'selectCharacter'" class="relative">
     <div
       class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
       style="
@@ -129,14 +114,13 @@ const goToGamePlay = () => {
       "
       >
       <button @click="goToHome" class="back-button absolute top-4 left-4 z-20">
-        <img src="/src/assets/images/element/back.png" 
+        <img src="/src/assets/images/element/back.png"
         style="transform: scale(2)"
         />
       </button>
 
-      <!-- หน้าSettings Button -->
-      <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
-        <img src="/src/assets/images/element/setting.png" 
+      <button @click="toggleSettings" class="settings-button absolute top-4 right-4 z-20">
+        <img src="/src/assets/images/element/setting.png"
         style="transform: scale(2)"
         />
       </button>
@@ -223,80 +207,113 @@ const goToGamePlay = () => {
         </button>
       </div>
     </div>
-  </div>
-
-  <div v-if="currentPage === 'settings'">
-    <div
-      class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
-      style="
-        background-image: url('/src/assets/images/bg/selectCharacterBG.png');
-      "
-    >
-    <!-- จัดหน้าปุ่มSetting -->
-      <div class="settings-panel-container relative flex items-center justify-center">
-      <img 
-          src="/src/assets/images/element/settingBox.png" 
+    <!-- หน้า Setting -->
+    <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
+      <div class="settings-panel-container relative">
+        <img
+          src="/src/assets/images/element/settingBox.png"
           class="settings-box-bg w-[280px] h-[320px] object-contain"
-        /> 
-        <div class="settings-content absolute inset-0 flex flex-col items-center justify-center">
-          <h1 class="press-start-2p text-white text-3xl text-center mb-10 ">
+        />
+        <div class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4">
+          <h1 class="press-start-2p text-white text-3xl text-center mb-10">
             Setting
           </h1>
 
-        <div class="flex flex-col items-center gap-4 ">
-          <!-- เพิ่ม Home Button -->
-          <button @click="goToHome" class="setting-icon-button">
-            <div class="icon-frame ">
-              <div class="icon-content home-icon">
-                <img src="/src/assets/images/element/home.png" 
-                style="transform: scale(2)"
-                />
+          <div class="flex flex-col items-center gap-4">
+            <button @click="goToHome" class="setting-icon-button">
+              <div class="icon-frame">
+                <div class="icon-content home-icon">
+                  <img src="/src/assets/images/element/home.png" style="transform: scale(2)" />
+                </div>
               </div>
-            </div>
-          </button>
+            </button>
 
-          <!-- ปุ่ม Resume -->
-          <button @click="resumeGame" class="setting-icon-button">
-            <div class="icon-frame">
-              <div class="icon-content play-icon">
-                <img src="/src/assets/images/element/playButton.png"
-                style="transform: scale(2)"
-                />
+            <button @click="toggleSettings" class="setting-icon-button">
+              <div class="icon-frame">
+                <div class="icon-content play-icon">
+                  <img src="/src/assets/images/element/playButton.png" style="transform: scale(2)" />
+                </div>
               </div>
-            </div>
-          </button>
+            </button>
 
-          <!-- Play Button -->
-          <button @click="goToSelectCharacter" class="setting-icon-button">
-            <div class="icon-frame">
-              <div class="icon-content replay-icon">
-                <img src="/src/assets/images/element/playAgain.png"
-                style="transform: scale(2)"
-                />
+            <button @click="goToSelectCharacter" class="setting-icon-button">
+              <div class="icon-frame">
+                <div class="icon-content replay-icon">
+                  <img src="/src/assets/images/element/playAgain.png" style="transform: scale(2)" />
+                </div>
               </div>
-            </div>
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
-  
-    <div v-if="currentPage === 'gamePlay'" class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url(/public/Bg/gamePlayBG.jpg)]">
-       <div class="absolute inset-0 bg-black/25">
-        <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
-          <img src="/src/assets/images/element/setting.png" 
-          style="transform: scale(1.5)"
-          />
-        </button>
+
+  <div v-if="currentPage === 'gamePlay'" class="relative">
+    <div class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
+    style="background-image: url('/public/Bg/gamePlayBG.jpg');
+           padding-left: 429px;
+           padding-right: 523px;"
+    >
+      <button @click="goToSelectCharacter" class="back-button absolute top-4 left-4 z-20">
+        <img src="/src/assets/images/element/back.png" 
+        style="transform: scale(2)"
+        />
+      </button>
+
+      <button @click="toggleSettings" class="settings-button absolute top-4 right-4 z-20">
+        <img src="/src/assets/images/element/setting.png" 
+        style="transform: scale(2)"
+        />
+      </button>
 
       <div class="relative w-[350px] h-[100px]">
         <img src="/src/assets/images/element/boxHpAndSta.png" class="w-full h-full">
         <div class="absolute w-[200px] h-90px">
-            <p>{{  }}</p>
+          <p>{{  }}</p>
         </div>
       </div>
-     </div>
+    </div>
+    
+    <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
+      <div class="settings-panel-container relative">
+        <img
+          src="/src/assets/images/element/settingBox.png"
+          class="settings-box-bg w-[280px] h-[320px] object-contain"
+        />
+        <div class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4">
+          <h1 class="press-start-2p text-white text-3xl text-center mb-10">
+            Setting
+          </h1>
+
+          <div class="flex flex-col items-center gap-4">
+            <button @click="goToHome" class="setting-icon-button">
+              <div class="icon-frame">
+                <div class="icon-content home-icon">
+                  <img src="/src/assets/images/element/home.png" style="transform: scale(2)" />
+                </div>
+              </div>
+            </button>
+
+            <button @click="toggleSettings" class="setting-icon-button">
+              <div class="icon-frame">
+                <div class="icon-content play-icon">
+                  <img src="/src/assets/images/element/playButton.png" style="transform: scale(2)" />
+                </div>
+              </div>
+            </button>
+
+            <button @click="goToSelectCharacter" class="setting-icon-button">
+              <div class="icon-frame">
+                <div class="icon-content replay-icon">
+                  <img src="/src/assets/images/element/playAgain.png" style="transform: scale(2)" />
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -413,12 +430,27 @@ const goToGamePlay = () => {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 215, 0, 0.2);
 }
+/* เพิ่ม css ของ setting */
+.settings-modal {
+  background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.settings-panel-container {
+  z-index: 100;
+  transform: scale(1.2);
+}
+
+.settings-content {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .settings-panel {
   width: 300px;
   background: #8B4513;
   border: 8px solid #654321;
-  box-shadow: 
+  box-shadow:
     inset 0 0 10px rgba(0,0,0,0.5),
     0 0 20px rgba(0,0,0,0.3);
 }
