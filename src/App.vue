@@ -134,7 +134,7 @@ const goToGamePlay = () => {
         />
       </button>
 
-      <!-- หน้าSettings Button -->
+      <!-- หน้า Settings Button -->
       <button @click="goToSettings" class="settings-button absolute top-4 right-4 z-20">
         <img src="/src/assets/images/element/setting.png" 
         style="transform: scale(2)"
