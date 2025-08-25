@@ -3,8 +3,34 @@ import { ref } from "vue";
 
 const currentPage = ref("home");
 const showSettings = ref(false);
-
 const selectedCharacter = ref(null);
+const currentBoss = ref(0);
+
+const bossCharacters = [
+  {
+    class: "Boss Stage 1",
+    name: "The Skeleton",
+    hp: 200,
+    atk: 10,
+    picture: "/src/assets/images/Character/bossStage1.png",
+  },
+  {
+    class: "Boss Stage 2",
+    name: "The Cured Armor",
+    hp: 300,
+    atk: 20,
+    specialAtk: 25,
+    picture: "/src/assets/images/Character/bossStage2.png",
+  },
+  {
+    class: "Boss Stage 3",
+    name: "The Lich",
+    hp: 500,
+    atk: 35,
+    specialAtk: 55,
+    picture: "/src/assets/images/Character/bossStage3.png",
+  },
+];
 
 const characters = [
   {
@@ -14,6 +40,9 @@ const characters = [
     sta: 100,
     atk: 35,
     skill: 50,
+    atkUsage: "-10 STA",
+    skillUsage: "-25 STA",
+    weakness: "Boss Stage 1",
     picture: "/src/assets/images/Character/knight.png",
   },
   {
@@ -23,6 +52,9 @@ const characters = [
     sta: 150,
     atk: 45,
     skill: 80,
+    atkUsage: "-25 STA",
+    skillUsage: "-40 STA",
+    weakness: "Boss Stage 2",
     picture: "/src/assets/images/Character/archer.png",
   },
   {
@@ -32,11 +64,13 @@ const characters = [
     sta: 200,
     atk: 15,
     skill: 100,
+    atkUsage: "-10 STA",
+    skillUsage: "-60 STA",
+    weakness: "Boss Stage 3",
     picture: "/src/assets/images/Character/magician.png",
   },
 ];
 
-//ไปหน้าหลัก
 const goToHome = () => {
   currentPage.value = "home";
   selectedCharacter.value = null;
@@ -67,79 +101,41 @@ const goToGamePlay = () => {
 <template>
   <div v-if="currentPage === 'home'">
     <div
-      class="bg-cover bg-center bg-no-repeat relative"
-      style="
-        background-image: url('/src/assets/images/bg/homePageBG.jpg');
-        padding-top: 350px;
-        padding-bottom: 352px;
-        padding-left: 702px;
-        padding-right: 710px;
-      "
-    >
-      <div class="bg-white/25 rounded-md ">
-        <div class="text-center" style="width: 500px; height: 250px" >
-          <h1
-            class="press-start-2p-regular text-white text-6xl mb-4"
-            style="width: 500px"
-          >
+      class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/src/assets/images/bg/homePageBG.jpg')]">
+      <div class="bg-white/25 rounded-md absolute top-[8vw] left-[12vw] w-[40vw] h-[28vw]">
+
+        <div class="text-center pt-[5vw] text-7xl text-white">
+          <h1 class="press-start-2p-regular pb-3">
             Solo
           </h1>
-          <h1 class="press-start-2p-regular text-white text-6xl">Fantasy</h1>
-          <div style="margin-top: 50px">
-            <button @click="goToSelectCharacter" class="cursor-pointer">
-              <img
-                src="/src/assets/images/element/playButton.png"
-                style="transform: scale(3)"
-              />
+          <h1 class="press-start-2p-regular">
+            Fantasy
+          </h1>
+          <div class="flex justify-center gap-[10vw] pt-[5vw]">
+            <button @click="goToSelectCharacter" class="icon-button cursor-pointer">
+              <img src="/src/assets/images/element/playButton.png" style="transform: scale(3.5)" />
             </button>
-            <button class="cursor-pointer" style="margin-left: 200px">
-              <img
-                src="/src/assets/images/element/Tutorial.png"
-                style="transform: scale(3)"
-              />
+            <button class="icon-button cursor-pointer">
+              <img src="/src/assets/images/element/Tutorial.png" style="transform: scale(3.5)" />
             </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-//Setting หน้าตัวละคร
+
   <div v-if="currentPage === 'selectCharacter'" class="relative">
     <div
-      class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
-      style="
-        background-image: url('/src/assets/images/bg/selectCharacterBG.png');
-        padding-left: 429px;
-        padding-right: 523px;
-      "
-      >
-      <button @click="goToHome" class="back-button absolute top-4 left-4 z-20">
-        <img src="/src/assets/images/element/back.png"
-        style="transform: scale(2)"
-        />
+      class="w-screen h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center bg-[url('/src/assets/images/bg/selectCharacterBG.png')]">
+      <button @click="goToHome" class="icon-button absolute top-[3vw] left-[5vw]">
+        <img src="/src/assets/images/element/back.png" style="transform: scale(2)" />
       </button>
-
-      <button @click="toggleSettings" class="settings-button absolute top-4 right-4 z-20">
-        <img src="/src/assets/images/element/setting.png"
-        style="transform: scale(2)"
-        />
-      </button>
-
-      <h1
-        class="press-start-2p text-white text-4xl md:text-6xl relative z-10 drop-shadow-lg"
-        style="width: 960px; margin-bottom: 50px"
-      >
+      <h1 class="press-start-2p text-white text-6xl relative drop-shadow-lg pt-[1vw]">
         Select Character
       </h1>
 
-      <div
-        class="flex justify-center items-center gap-6 mb-12 relative z-10 max-w-6xl"
-      >
-        <div
-          v-for="character in characters"
-          :key="character.class"
-          @click="selectCharacter(character)"
-          :class="[
+      <div class="flex justify-center items-center relative gap-[5vw] pt-[3vw]">
+        <div v-for="character in characters" :key="character.class" @click="selectCharacter(character)" :class="[
             'character-card cursor-pointer transition-all duration-300',
             selectedCharacter?.class === character.class ? 'selected' : '',
             selectedCharacter?.class === 'knight' &&
@@ -153,160 +149,127 @@ const goToGamePlay = () => {
             selectedCharacter?.class === 'mage' && character.class === 'mage'
               ? 'selected-mage'
               : '',
-          ]"
-        >
-          <img
-            :src="character.picture"
-            :alt="character.name"
-            class="w-full h-full object-contain"
-          />
+          ]">
+          <img :src="character.picture" :alt="character.name" />
 
-          <div
-            style="
-              background: rgba(255, 255, 255, 1);
+          <div style="
+              background: rgba(255, 240, 231, 100);
               border-radius: 8px;
               padding: 12px;
               border: 2px solid #444;
-            "
-          >
-            <h3
-              class="press-start-2p text-black text-sm mb-3 text-center"
-              style="margin-bottom: 10px"
-            >
+            ">
+            <h3 class="press-start-2p text-black text-sm mb-3 text-center" style="margin-bottom: 10px">
               {{ character.name }}
             </h3>
             <div>
               <div class="stat-row">
-                <span class="text-blue-500">HP</span>
+                <span class="text-black">HP</span>
                 <span class="text-black">{{ character.hp }}</span>
               </div>
               <div class="stat-row">
-                <span class="text-blue-500">STA</span>
+                <span class="text-black">STA</span>
                 <span class="text-black">{{ character.sta }}</span>
               </div>
               <div class="stat-row">
-                <span class="text-blue-500">ATK</span>
-                <span class="text-black">{{ character.atk }}</span>
+                <span class="text-black">ATK</span>
+                <span class="text-black">
+                  {{ character.atk }}<span> ({{ character.atkUsage }})</span>
+                </span>
               </div>
               <div class="stat-row">
-                <span class="text-blue-500">SKILL</span>
-                <span class="text-black">{{ character.skill }}</span>
+                <span class="text-black">SKILL</span>
+                <span class="text-black">
+                  {{ character.skill }}<span> ({{ character.skillUsage }})</span>
+                </span>
               </div>
+
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center" style="margin-top: 100px">
-        <button
-          @click="goToGamePlay"
-          :disabled="!selectedCharacter"
-          class="select-button relative z-10"
-        >
+      <div class="text-center pt-[3vw]">
+        <button @click="goToGamePlay" :disabled="!selectedCharacter" class="select-button relative">
           Select
         </button>
       </div>
     </div>
-    <!-- หน้า Setting -->
-    <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
-      <div class="settings-panel-container relative">
-        <img
-          src="/src/assets/images/element/settingBox.png"
-          class="settings-box-bg w-[280px] h-[320px] object-contain"
-        />
-        <div class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4">
-          <h1 class="press-start-2p text-white text-3xl text-center mb-10">
-            Setting
-          </h1>
-
-          <div class="flex flex-col items-center gap-4">
-            <button @click="goToHome" class="setting-icon-button">
-              <div class="icon-frame">
-                <div class="icon-content home-icon">
-                  <img src="/src/assets/images/element/home.png" style="transform: scale(2)" />
-                </div>
-              </div>
-            </button>
-
-            <button @click="toggleSettings" class="setting-icon-button">
-              <div class="icon-frame">
-                <div class="icon-content play-icon">
-                  <img src="/src/assets/images/element/playButton.png" style="transform: scale(2)" />
-                </div>
-              </div>
-            </button>
-
-            <button @click="goToSelectCharacter" class="setting-icon-button">
-              <div class="icon-frame">
-                <div class="icon-content replay-icon">
-                  <img src="/src/assets/images/element/playAgain.png" style="transform: scale(2)" />
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-
-  <div v-if="currentPage === 'gamePlay'" class="relative">
-    <div class="min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center p-4"
-    style="background-image: url('/public/Bg/gamePlayBG.jpg');
-           padding-left: 429px;
-           padding-right: 523px;"
-    >
-      <button @click="goToSelectCharacter" class="back-button absolute top-4 left-4 z-20">
-        <img src="/src/assets/images/element/back.png" 
-        style="transform: scale(2)"
-        />
+  <div v-if="currentPage === 'gamePlay'"
+    class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/src/assets/images/bg/gamePlayBG.jpg')] press-start-2p">
+    <div class="absolute inset-0 bg-black/30">
+      <button @click="toggleSettings" class="icon-button absolute top-[3.5vw] left-[93vw]">
+        <img src="/src/assets/images/element/setting.png" style="transform: scale(2.5)" />
       </button>
-
-      <button @click="toggleSettings" class="settings-button absolute top-4 right-4 z-20">
-        <img src="/src/assets/images/element/setting.png" 
-        style="transform: scale(2)"
-        />
-      </button>
-
-      <div class="relative w-[350px] h-[100px]">
+      <div class="absolute w-[400px] h-[140px] top-[50px] left-[300px]">
         <img src="/src/assets/images/element/boxHpAndSta.png" class="w-full h-full">
-        <div class="absolute w-[200px] h-90px">
-          <p>{{  }}</p>
+
+        <!-- boss -->
+        <div class="absolute top-[27px] left-[60px] text-white text-lg">
+          <span>{{ bossCharacters[currentBoss].name }}</span>
+        </div>
+        <div class="absolute top-[60px] left-[60px] text-white text-lg">
+          <span class="flex">HP</span>
+        </div>
+        <div class="absolute top-[90px] left-[150px] text-white text-md">
+          <span>{{ bossCharacters[currentBoss].hp}}</span>/
+          <span>{{ bossCharacters[currentBoss].hp }}</span>
+        </div>
+
+        <!-- hero -->
+        <div class="absolute w-[550px] h-[170px] top-[300px] left-[550px]"> <img
+            src="/src/assets/images/element/boxHpAndSta.png" class="w-full h-full">
+          <div class="absolute top-[40px] left-[60px] text-white text-lg">
+            <span>{{ selectedCharacter?.name }}</span>
+          </div>
+          <div class="absolute top-[80px] left-[60px] text-white text-lg">
+            <span class="flex">HP</span>
+          </div>
+          <div class="absolute top-[110px] left-[150px] text-white text-md">
+            <span>{{ selectedCharacter?.hp}}</span>/<span>{{ selectedCharacter?.hp }}</span>
+          </div>
+          <div class="absolute top-[80px] left-[300px] text-white text-lg">
+            <span class="flex">STA</span>
+          </div>
+          <div class="absolute top-[110px] left-[400px] text-white text-md">
+            <span>{{ selectedCharacter?.sta}}</span>/<span>{{ selectedCharacter?.sta }}</span>
+          </div>
         </div>
       </div>
     </div>
-    
-    <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
-      <div class="settings-panel-container relative">
-        <img
-          src="/src/assets/images/element/settingBox.png"
-          class="settings-box-bg w-[280px] h-[320px] object-contain"
-        />
-        <div class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4">
-          <h1 class="press-start-2p text-white text-3xl text-center mb-10">
-            Setting
-          </h1>
 
-          <div class="flex flex-col items-center gap-4">
-            <button @click="goToHome" class="setting-icon-button">
-              <div class="icon-frame">
-                <div class="icon-content home-icon">
-                  <img src="/src/assets/images/element/home.png" style="transform: scale(2)" />
+  </div>
+
+  <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
+    <div class="settings-panel-container relative">
+      <img src="/src/assets/images/element/settingBox.png" class="settings-box-bg w-[280px] h-[320px] object-contain" />
+      <div class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4">
+        <h1 class="press-start-2p text-white text-3xl text-center pb-[2vw]">
+          Setting
+        </h1>
+        <div class="flex flex-col items-center gap-6">
+          <div class="flex justify-center gap-[4vw]">
+            <button @click="toggleSettings" class="icon-button">
+              <div class="Play">
+                <div class="icon-content">
+                  <img src="/src/assets/images/element/playButton.png" style="transform: scale(2.5)" />
                 </div>
               </div>
             </button>
-
-            <button @click="toggleSettings" class="setting-icon-button">
-              <div class="icon-frame">
-                <div class="icon-content play-icon">
-                  <img src="/src/assets/images/element/playButton.png" style="transform: scale(2)" />
+            <button @click="goToSelectCharacter" class="icon-button">
+              <div class="Back">
+                <div class="icon-content">
+                  <img src="/src/assets/images/element/playAgain.png" style="transform: scale(2.5)" />
                 </div>
               </div>
             </button>
+          </div>
 
-            <button @click="goToSelectCharacter" class="setting-icon-button">
-              <div class="icon-frame">
-                <div class="icon-content replay-icon">
-                  <img src="/src/assets/images/element/playAgain.png" style="transform: scale(2)" />
+          <div class="flex justify-center pt-[1vw]">
+            <button @click="goToHome" class="icon-button">
+              <div class="Home">
+                <div class="icon-content">
+                  <img src="/src/assets/images/element/home.png" style="transform: scale(2.5)" />
                 </div>
               </div>
             </button>
@@ -315,6 +278,7 @@ const goToGamePlay = () => {
       </div>
     </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -323,16 +287,15 @@ const goToGamePlay = () => {
 .press-start-2p-regular,
 .press-start-2p {
   font-family: "Press Start 2P", system-ui;
-  font-weight: 400;
+  font-weight: 600;
   font-style: normal;
 }
 
 .character-card {
-  width: 300px;
+  width: 15vw;
   background: linear-gradient(145deg, #000000);
   padding: 5px;
   transform: translateY(0);
-  margin-left: 50px;
 }
 
 .character-card:hover {
@@ -394,43 +357,6 @@ const goToGamePlay = () => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.back-button {
-  font-family: "Press Start 2P", system-ui;
-  font-size: 16px;
-  color: #ffd700;
-  background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
-  border: 2px solid #666;
-  border-radius: 8px;
-  padding: 12px 24px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.back-button:hover {
-  background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
-  border-color: #ffd700;
-  transform: translateY(-2px);
-}
-
-.settings-button {
-  font-family: "Press Start 2P", system-ui;
-  color: #ffd700;
-  background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
-  border: 2px solid #666;
-  border-radius: 8px;
-  padding: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.settings-button:hover {
-  background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
-  border-color: #ffd700;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 215, 0, 0.2);
-}
-/* เพิ่ม css ของ setting */
 .settings-modal {
   background-color: rgba(0, 0, 0, 0.5); 
 }
@@ -455,19 +381,18 @@ const goToGamePlay = () => {
     0 0 20px rgba(0,0,0,0.3);
 }
 
-.setting-icon-button {
+.icon-button {
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.setting-icon-button:hover {
+.icon-button:hover {
   transform: scale(1.1);
 }
 
-.setting-icon-button:active {
+.icon-button:active {
   transform: scale(0.95);
 }
-
 
 .icon-content {
   width: 50px;
@@ -480,17 +405,7 @@ const goToGamePlay = () => {
   box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
 }
 
-.home-icon {
-  margin-top: 3px;
-}
-
-.play-icon {
-  margin-top: 3px;
-  margin-bottom: 3px;
-}
-
-.replay-icon {
-  margin-top: 3px;
-  margin-bottom: 3px;
+.stroke-black {
+  -webkit-text-stroke: 2px black;
 }
 </style>
