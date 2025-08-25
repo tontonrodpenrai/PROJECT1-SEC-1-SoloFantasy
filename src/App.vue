@@ -11,6 +11,9 @@ const bossMaxHp = ref(0)
 const heroHp = ref(0)
 const heroMaxHp = ref(0)
 
+const heroSta = ref(0)
+const heroMaxSta = ref(0)
+
 const bossCharacters = [
   {
     class: "Boss Stage 1",
@@ -98,6 +101,8 @@ const selectCharacter = (character) => {
   selectedCharacter.value = character;
   heroHp.value = character.hp;
   heroMaxHp.value = character.hp;
+  heroSta.value = character.sta;
+  heroMaxSta.value = character.sta;
   bossMaxHp.value = bossCharacters[currentBoss.value].hp;
   bossHp.value = bossMaxHp.value;
 }
@@ -111,13 +116,20 @@ const goToGamePlay = () => {
 
 const attackBoss = () =>{
   let damageToBoss = 0
+  let staCost = 0
   switch(selectedCharacter.value.class) {
-    case "knight" : damageToBoss = 35; break
-    case "archer": damageToBoss = 45; break
-    case "mage": damageToBoss = 20; break
+    case "knight" : damageToBoss = 35, staCost = 10; break
+    case "archer": damageToBoss = 45, staCost = 25; break
+    case "mage": damageToBoss = 20, staCost = 10; break
   }
-  bossHp.value = Math.max(0, bossHp.value - damageToBoss)
 
+  if (heroSta.value < staCost) {
+    console.log("Not enough stamina!")
+    return
+  }
+  heroSta.value = Math.max(0, heroSta.value - staCost)
+
+  bossHp.value = Math.max(0, bossHp.value - damageToBoss)
   const damageToHero = 10
   heroHp.value = Math.max(0, heroHp.value - damageToHero)
 }
@@ -126,8 +138,7 @@ const attackBoss = () =>{
 
 <template>
   <div v-if="currentPage === 'home'">
-    <div
-      class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/images/bg/homePageBG.jpg')]">
+    <div class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/images/bg/homePageBG.jpg')]">
       <div class="bg-white/25 rounded-md absolute top-[8vw] left-[12vw] w-[40vw] h-[28vw]">
 
         <div class="text-center pt-[5vw] text-7xl text-white">
@@ -236,35 +247,39 @@ const attackBoss = () =>{
         <div class="absolute top-[60px] flex left-[60px] text-white text-lg">
           <span>HP </span>
           <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
-            <div class="h-full bg-[#FF3A3A] transition-all duration-500" 
+            <div class="h-full bg-[#FF3A3A] transition-all duration-500"
               :style="{ width: (bossHp / bossMaxHp * 100) + '%' }"></div>
           </div>
         </div>
-        <div class="absolute top-[90px] left-[150px] text-white text-md">
-           {{ bossHp }} / {{ bossMaxHp }}
+        <div class="absolute top-[90px] left-[130px] text-white text-md">
+          {{ bossHp }} / {{ bossMaxHp }}
         </div>
 
         <!-- hero -->
-        <div class="absolute w-[565px] h-[170px] top-[300px] left-[630px]"> <img
+        <div class="absolute w-[570px] h-[170px] top-[300px] left-[630px]"> <img
             src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
           <div class="absolute top-[40px] left-[60px] text-white text-lg">
             <span>{{ selectedCharacter?.name }}</span>
           </div>
-          <div class="absolute top-[80px] flex left-[60px] text-white text-lg">
-            <span >HP</span>
-              <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
-                <div class="h-full bg-[#FF3A3A] transition-all duration-500"
-                  :style="{ width: (heroHp / heroMaxHp * 100) + '%' }"></div>
-              </div>
+          <div class="absolute top-[80px] flex left-[40px] text-white text-lg">
+            <span>HP</span>
+            <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
+              <div class="h-full bg-[#FF3A3A] transition-all duration-500"
+                :style="{ width: (heroHp / heroMaxHp * 100) + '%' }"></div>
+            </div>
           </div>
-          <div class="absolute top-[110px] left-[150px] text-white text-md">
+          <div class="absolute top-[110px] left-[115px] text-white text-md">
             {{ heroHp }} / {{ heroMaxHp }}
           </div>
-          <div class="absolute top-[80px] left-[300px] text-white text-lg">
-            <span class="flex">STA</span>
+          <div class="absolute top-[80px] flex right-[30px] text-white text-lg">
+            <span>STA</span>
+            <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
+              <div class="h-full bg-[#3ab7ff] transition-all duration-500"
+                :style="{ width: (heroSta / heroMaxSta * 100) + '%' }"></div>
+            </div>
           </div>
-          <div class="absolute top-[110px] left-[400px] text-white text-md">
-            <span>{{ selectedCharacter?.sta}}</span>/<span>{{ selectedCharacter?.sta }}</span>
+          <div class="absolute top-[110px] right-[60px] text-white text-md">
+            {{ heroSta }} / {{ heroMaxSta }}
           </div>
         </div>
       </div>
@@ -277,8 +292,9 @@ const attackBoss = () =>{
             <div class="flex flex-col py-7 items-center justify-center">
               <p class="text-2xl pb-3">ATK</p>
               <div class="relative w-27 h-27">
-                <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md "/>
-                <img @click="attackBoss"  v-if="selectedCharacter" :src="selectedCharacter.atkPicture" class="absolute top-1/2 left-1/2 w-21 h-21 object-contain -translate-x-1/2 -translate-y-1/2 cursor-pointer" />
+                <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md " />
+                <img @click="attackBoss" v-if="selectedCharacter" :src="selectedCharacter.atkPicture"
+                  class="absolute top-1/2 left-1/2 w-21 h-21 object-contain -translate-x-1/2 -translate-y-1/2 cursor-pointer" />
               </div>
             </div>
           </div>
