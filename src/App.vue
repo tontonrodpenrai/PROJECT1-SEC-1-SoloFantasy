@@ -14,16 +14,18 @@ const heroMaxHp = ref(0)
 const heroSta = ref(0)
 const heroMaxSta = ref(0)
 
+const turn = ref(1)
+
 const bossCharacters = [
   {
-    class: "Boss Stage 1",
+    class: "1",
     name: "The Skeleton",
     hp: 200,
     atk: 10,
     picture: "/images/character/bossStage1.png",
   },
   {
-    class: "Boss Stage 2",
+    class: "2",
     name: "The Cured Armor",
     hp: 300,
     atk: 20,
@@ -31,7 +33,7 @@ const bossCharacters = [
     picture: "/images/character/bossStage2.png",
   },
   {
-    class: "Boss Stage 3",
+    class: "3",
     name: "The Lich",
     hp: 500,
     atk: 35,
@@ -114,24 +116,46 @@ const goToGamePlay = () => {
   }
 }
 
-const attackBoss = () =>{
+const attackBoss = () => {
   let damageToBoss = 0
   let staCost = 0
+
   switch(selectedCharacter.value.class) {
-    case "knight" : damageToBoss = 35, staCost = 10; break
-    case "archer": damageToBoss = 45, staCost = 25; break
-    case "mage": damageToBoss = 20, staCost = 10; break
+    case "knight": damageToBoss = 35; staCost = 10; break
+    case "archer": damageToBoss = 45; staCost = 25; break
+    case "mage": damageToBoss = 20; staCost = 10; break
   }
 
   if (heroSta.value < staCost) {
     console.log("Not enough stamina!")
     return
   }
-  heroSta.value = Math.max(0, heroSta.value - staCost)
 
+  heroSta.value = Math.max(0, heroSta.value - staCost)
   bossHp.value = Math.max(0, bossHp.value - damageToBoss)
-  const damageToHero = 10
-  heroHp.value = Math.max(0, heroHp.value - damageToHero)
+
+  if (bossHp.value > 0 && heroHp.value > 0) {
+    setTimeout(() => {
+      const damageToHero = bossCharacters[currentBoss.value].atk
+      heroHp.value = Math.max(0, heroHp.value - damageToHero)
+      if (heroHp.value > 0) {
+        turn.value += 1
+      }
+    }, 1000)
+  } else if (bossHp.value <= 0) {
+    currentBoss.value += 1
+    if (currentBoss.value < bossCharacters.length) {
+      bossMaxHp.value = bossCharacters[currentBoss.value].hp
+      bossHp.value = bossMaxHp.value
+      heroHp.value = selectedCharacter.value.hp
+      heroMaxHp.value = selectedCharacter.value.hp
+      heroSta.value = selectedCharacter.value.sta
+      heroMaxSta.value = selectedCharacter.value.sta
+      turn.value = 1
+    } else {
+      console.log("You clear all stages!")
+    }
+  }
 }
 
 </script>
@@ -285,7 +309,14 @@ const attackBoss = () =>{
       </div>
       <div class="fixed bottom-0 left-0 w-full h-52 bg-white/60 flex text-black">
         <div class="flex-1 flex items-center justify-center border-r-2 border-black">
-          กล่องซ้าย
+          <div class="absolute top-5 left-5 flex gap-2 z-50">
+            <div class="bg-white px-4 py-2 border-2 border-black">
+              <p>Stage {{ bossCharacters[currentBoss].class }}</p>
+            </div>
+            <div class="bg-white px-4 py-2 border-2 border-black">
+              <p>Turn {{ turn }}</p>
+            </div>
+          </div>
         </div>
         <div class="flex-1 flex items-center justify-center">
           <div class="flex-1 border-r h-full">
