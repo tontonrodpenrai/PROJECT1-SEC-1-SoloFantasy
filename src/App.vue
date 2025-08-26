@@ -50,8 +50,8 @@ const characters = [
     sta: 100,
     atk: 35,
     skill: 50,
-    atkUsage: "-10 STA",
-    skillUsage: "-25 STA",
+    atkUsage: 10,
+    skillUsage: 25,
     weakness: "Boss Stage 1",
     picture: "/images/character/knight.png",
     atkPicture: "/images/playerAction/knight_atk.png"
@@ -63,8 +63,8 @@ const characters = [
     sta: 150,
     atk: 45,
     skill: 80,
-    atkUsage: "-25 STA",
-    skillUsage: "-40 STA",
+    atkUsage: 25,
+    skillUsage: 40,
     weakness: "Boss Stage 2",
     picture: "/images/character/archer.png",
     atkPicture: "/images/playerAction/archer_atk.png"
@@ -76,8 +76,8 @@ const characters = [
     sta: 200,
     atk: 15,
     skill: 100,
-    atkUsage: "-10 STA",
-    skillUsage: "-60 STA",
+    atkUsage: 10,
+    skillUsage: 60,
     weakness: "Boss Stage 3",
     picture: "/images/character/magician.png",
     atkPicture: "/images/playerAction/magician_atk.png"
@@ -118,20 +118,18 @@ const goToGamePlay = () => {
 
 const attackBoss = () => {
   let damageToBoss = 0
-  let staCost = 0
-
   switch(selectedCharacter.value.class) {
-    case "knight": damageToBoss = 35; staCost = 10; break
-    case "archer": damageToBoss = 45; staCost = 25; break
-    case "mage": damageToBoss = 20; staCost = 10; break
+    case "knight" : damageToBoss = 35, selectedCharacter.value.atkUsage[0]; break
+    case "archer": damageToBoss = 45, selectedCharacter.value.atkUsage[1]; break
+    case "mage": damageToBoss = 20, selectedCharacter.value.atkUsage[2]; break
   }
 
-  if (heroSta.value < staCost) {
+  if (heroSta.value < selectedCharacter?.value.atkUsage) {
     console.log("Not enough stamina!")
     return
   }
+  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage)
 
-  heroSta.value = Math.max(0, heroSta.value - staCost)
   bossHp.value = Math.max(0, bossHp.value - damageToBoss)
 
   if (bossHp.value > 0 && heroHp.value > 0) {
@@ -238,7 +236,7 @@ const attackBoss = () => {
               <div class="stat-row">
                 <span class="text-black">SKILL</span>
                 <span class="text-black">
-                  {{ character.skill }}<span> ({{ character.skillUsage }})</span>
+                  {{ character.skill }}<span> (-{{ character.skillUsage }} STA)</span>
                 </span>
               </div>
 
