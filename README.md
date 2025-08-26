@@ -1,7 +1,7 @@
 # PROJECT1-SEC-1-Solo Fantasy
 | รหัสนักศึกษา    | ชื่อ               | GitHub Username | Week#1 | Week#2 | Week#3 | Week#4 | Week#5 |
 | :---       	  | :---              | :---            | :--- | :---   | :---   | :---   | :---   |
-| `65130500019` | ณัฐภัทร ถาวร        | Jy98Prem2547    | เสนอเกมที่จะทำ,คิด idea เกม turn base | หา Reference เกม และทำ Figma | บอก Stage และ Turn ในการต่อสู้ 
+| `65130500019` | ณัฐภัทร ถาวร        | Jy98Prem2547    | เสนอเกมที่จะทำ,คิด idea เกม turn base | หา Reference เกม และทำ Figma | สร้าง UI turn และ stage , เพิ่ม (logic เปลี่ยน turn และ stage , เปลี่ยน boss , reset hp และ sta ของ hero และ boss เวลาเปลี่ยน stage , เพิ่ม settimeout) ใน Function attackBoss
 | `66130500048` | นนทรัตน์ ธนพิพัฒน์ชัย | Naynay00066     | เสนอเกมที่จะทำ,คิด idea เกม turn base | หาโทนสีของเกมและ font ของเกม ทำfigmaให้เห็นภาพรวมของเกม | สร้างหลอด HP กับ Stamina ของตัวละครฝั่งผู้เล่นและ boss | 
 | `66135000064` | พนิตพิชา รังกูล      | tontonrodpenrai | เสนอเกมที่จะทำ,คิด idea เกม turn base | หาelementรูปที่จะประกอบในเกมและ ทำfigmaให้เห็นภาพรวมของเกม | สร้างหลอด HP กับ Stamina ของตัวละครฝั่งผู้เล่นและ boss |
 | `66130500084` | สุกฤษฏิ์ อรียเวโรจน์   | Markpppp        | เสนอเกมที่จะทำ,คิด idea เกม turn base | หารูปภาพประกอบของตัวละครและ หารูปภาพหน้าเลือกตัวละครก่อนเข้าเกม | ทำส่วนของหน้าSettingเกมและ ปุ่มSetting |
