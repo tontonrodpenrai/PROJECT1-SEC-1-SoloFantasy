@@ -120,12 +120,39 @@ const goToGamePlay = () => {
 const attackBoss = () => {
   const damageToBoss = selectedCharacter.value.atk
   bossHp.value = Math.max(0, bossHp.value - damageToBoss)
-  attackHero()
+  
+  isBossTurn.value = true
+
+  setTimeout(() => {
+    attackHero()
+  }, 1500)
+
+  if(bossHp.value === 0){
+    currentBoss.value += 1
+    if (currentBoss.value < bossCharacters.length) {
+
+      bossMaxHp.value = bossCharacters[currentBoss.value].hp
+      bossHp.value = bossMaxHp.value
+
+      heroHp.value = selectedCharacter.value.hp
+      heroMaxHp.value = selectedCharacter.value.hp
+      heroSta.value = selectedCharacter.value.sta
+      heroMaxSta.value = selectedCharacter.value.sta
+      turn.value = 1
+
+      isBossTurn.value = false
+    } 
+  }
 }
 
 const attackHero = () => {
   const damageToHero = bossCharacters[currentBoss.value].atk
   heroHp.value = Math.max(0, heroHp.value - damageToHero)
+
+  if (heroHp.value > 0) {
+    turn.value += 1
+    isBossTurn.value = false
+  }
 }
 
 </script>
@@ -294,7 +321,7 @@ const attackHero = () => {
               <p class="text-2xl pb-3">ATK</p>
               <div class="relative w-27 h-27">
                 <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md " />
-                <button @click="attackBoss" class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer">
+                <button @click="attackBoss" :disabled="isBossTurn" class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer" :class="{'opacity-50 cursor-not-allowed': isBossTurn}">
                   <img v-if="selectedCharacter" :src="selectedCharacter.atkPicture" class="w-full h-full object-contain" />
                 </button>
               </div>
