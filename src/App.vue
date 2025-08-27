@@ -15,6 +15,7 @@ const heroSta = ref(0)
 const heroMaxSta = ref(0)
 
 const turn = ref(1)
+const isBossTurn = ref(false)
 
 const bossCharacters = [
   {
@@ -117,43 +118,14 @@ const goToGamePlay = () => {
 }
 
 const attackBoss = () => {
-  let damageToBoss = 0
-  switch(selectedCharacter.value.class) {
-    case "knight" : damageToBoss = 35, selectedCharacter.value.atkUsage[0]; break
-    case "archer": damageToBoss = 45, selectedCharacter.value.atkUsage[1]; break
-    case "mage": damageToBoss = 20, selectedCharacter.value.atkUsage[2]; break
-  }
-
-  if (heroSta.value < selectedCharacter?.value.atkUsage) {
-    console.log("Not enough stamina!")
-    return
-  }
-  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage)
-
+  const damageToBoss = selectedCharacter.value.atk
   bossHp.value = Math.max(0, bossHp.value - damageToBoss)
+  attackHero()
+}
 
-  if (bossHp.value > 0 && heroHp.value > 0) {
-    setTimeout(() => {
-      const damageToHero = bossCharacters[currentBoss.value].atk
-      heroHp.value = Math.max(0, heroHp.value - damageToHero)
-      if (heroHp.value > 0) {
-        turn.value += 1
-      }
-    }, 1000)
-  } else if (bossHp.value <= 0) {
-    currentBoss.value += 1
-    if (currentBoss.value < bossCharacters.length) {
-      bossMaxHp.value = bossCharacters[currentBoss.value].hp
-      bossHp.value = bossMaxHp.value
-      heroHp.value = selectedCharacter.value.hp
-      heroMaxHp.value = selectedCharacter.value.hp
-      heroSta.value = selectedCharacter.value.sta
-      heroMaxSta.value = selectedCharacter.value.sta
-      turn.value = 1
-    } else {
-      console.log("You clear all stages!")
-    }
-  }
+const attackHero = () => {
+  const damageToHero = bossCharacters[currentBoss.value].atk
+  heroHp.value = Math.max(0, heroHp.value - damageToHero)
 }
 
 </script>
@@ -322,8 +294,9 @@ const attackBoss = () => {
               <p class="text-2xl pb-3">ATK</p>
               <div class="relative w-27 h-27">
                 <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md " />
-                <img @click="attackBoss" v-if="selectedCharacter" :src="selectedCharacter.atkPicture"
-                  class="absolute top-1/2 left-1/2 w-21 h-21 object-contain -translate-x-1/2 -translate-y-1/2 cursor-pointer" />
+                <button @click="attackBoss" class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer">
+                  <img v-if="selectedCharacter" :src="selectedCharacter.atkPicture" class="w-full h-full object-contain" />
+                </button>
               </div>
             </div>
           </div>
