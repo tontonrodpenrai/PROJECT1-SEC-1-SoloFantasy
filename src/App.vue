@@ -123,6 +123,8 @@ const attackBoss = () => {
   
   isBossTurn.value = true
 
+  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage)
+
   setTimeout(() => {
     attackHero()
   }, 1500)
