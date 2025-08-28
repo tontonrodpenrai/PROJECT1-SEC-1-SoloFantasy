@@ -55,6 +55,7 @@ const characters = [
     skillUsage: 25,
     weakness: "Boss Stage 1",
     picture: "/images/character/knight.png",
+    pictureGameplay: "/images/character/knight1.png",
     atkPicture: "/images/playerAction/knight_atk.png"
   },
   {
@@ -68,6 +69,7 @@ const characters = [
     skillUsage: 40,
     weakness: "Boss Stage 2",
     picture: "/images/character/archer.png",
+    pictureGameplay: "/images/character/archer1.png",
     atkPicture: "/images/playerAction/archer_atk.png"
   },
   {
@@ -81,10 +83,10 @@ const characters = [
     skillUsage: 60,
     weakness: "Boss Stage 3",
     picture: "/images/character/magician.png",
+    pictureGameplay: "/images/character/magician1.png",
     atkPicture: "/images/playerAction/magician_atk.png"
   },
 ]
-
 const goToHome = () => {
   currentPage.value = "home";
   selectedCharacter.value = null;
@@ -260,27 +262,29 @@ const attackHero = () => {
         <img src="./assets/images/element/setting.png" style="transform: scale(2.5)" />
       </button>
       <div class="absolute w-[400px] h-[140px] top-[50px] left-[300px]">
-        <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
-        <img></img>
-
         <!-- boss -->
-        <div class="absolute top-[27px] left-[60px] text-white text-lg">
-          <span>{{ bossCharacters[currentBoss].name }}</span>
-        </div>
-        <div class="absolute top-[60px] flex left-[60px] text-white text-lg">
-          <span>HP </span>
-          <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
-            <div class="h-full bg-[#FF3A3A] transition-all duration-500"
-              :style="{ width: (bossHp / bossMaxHp * 100) + '%' }"></div>
+        <div>
+          <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
+          <div class="absolute top-[27px] left-[60px] text-white text-lg">
+            <span>{{ bossCharacters[currentBoss].name }}</span>
+          </div>
+          <div class="absolute top-[60px] flex left-[60px] text-white text-lg">
+            <span>HP </span>
+            <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
+              <div class="h-full bg-[#FF3A3A] transition-all duration-500" :style="{ width: (bossHp / bossMaxHp * 100) + '%' }"></div>
+            </div>
+          </div>
+          <div class="absolute top-[90px] left-[130px] text-white text-md">
+            {{ bossHp }} / {{ bossMaxHp }}
           </div>
         </div>
-        <div class="absolute top-[90px] left-[130px] text-white text-md">
-          {{ bossHp }} / {{ bossMaxHp }}
-        </div>
-
         <!-- hero -->
-        <div class="absolute w-[570px] h-[170px] top-[300px] left-[630px]"> <img
-            src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
+        <div>
+          <div class="h-55 w-78 py-6">
+            <img :src="selectedCharacter?.pictureGameplay" alt="picture"/>
+          </div>
+          <div class="absolute w-[570px] h-[170px] top-[300px] left-[630px]"> 
+            <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
           <div class="absolute top-[40px] left-[60px] text-white text-lg">
             <span>{{ selectedCharacter?.name }}</span>
           </div>
@@ -305,6 +309,7 @@ const attackHero = () => {
             {{ heroSta }} / {{ heroMaxSta }}
           </div>
         </div>
+      </div>
       </div>
       <div class="fixed bottom-0 left-0 w-full h-52 bg-white/60 flex text-black">
         <div class="flex-1 flex items-center justify-center border-r-2 border-black">
@@ -338,7 +343,6 @@ const attackHero = () => {
         </div>
       </div>
     </div>
-
   </div>
 
   <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
