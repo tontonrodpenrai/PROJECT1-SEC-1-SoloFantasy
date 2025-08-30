@@ -1,21 +1,23 @@
 <script setup>
 import { ref } from "vue";
 
-const currentPage = ref("home")
-const showSettings = ref(false)
-const selectedCharacter = ref(null)
-const currentBoss = ref(0)
+const currentPage = ref("home");
+const showSettings = ref(false);
+const selectedCharacter = ref(null);
+const currentBoss = ref(0);
 
-const bossHp = ref(0)
-const bossMaxHp = ref(0)
-const heroHp = ref(0)
-const heroMaxHp = ref(0)
+const bossHp = ref(0);
+const bossMaxHp = ref(0);
+const heroHp = ref(0);
+const heroMaxHp = ref(0);
 
-const heroSta = ref(0)
-const heroMaxSta = ref(0)
+const heroSta = ref(0);
+const heroMaxSta = ref(0);
+const enableSkill = ref(false);
+const disableSkillTurn = ref(0);
 
-const turn = ref(1)
-const isBossTurn = ref(false)
+const turn = ref(1);
+const isBossTurn = ref(false);
 
 const bossCharacters = [
   {
@@ -41,7 +43,7 @@ const bossCharacters = [
     specialAtk: 55,
     picture: "/images/character/bossStage3.png",
   },
-]
+];
 
 const characters = [
   {
@@ -56,7 +58,8 @@ const characters = [
     weakness: "Boss Stage 1",
     picture: "/images/character/knight.png",
     pictureGameplay: "/images/character/knight1.png",
-    atkPicture: "/images/playerAction/knight_atk.png"
+    atkPicture: "/images/playerAction/knight_atk.png",
+    skillPicture: "/images/playerAction/knight_skill.png",
   },
   {
     class: "archer",
@@ -70,7 +73,8 @@ const characters = [
     weakness: "Boss Stage 2",
     picture: "/images/character/archer.png",
     pictureGameplay: "/images/character/archer1.png",
-    atkPicture: "/images/playerAction/archer_atk.png"
+    atkPicture: "/images/playerAction/archer_atk.png",
+    skillPicture: "/images/playerAction/archer_skill.png",
   },
   {
     class: "mage",
@@ -84,111 +88,150 @@ const characters = [
     weakness: "Boss Stage 3",
     picture: "/images/character/magician.png",
     pictureGameplay: "/images/character/magician1.png",
-    atkPicture: "/images/playerAction/magician_atk.png"
+    atkPicture: "/images/playerAction/magician_atk.png",
+    skillPicture: "/images/playerAction/magician_skill.png",
   },
-]
+];
 const goToHome = () => {
-  currentPage.value = "home"
-  selectedCharacter.value = null
-  showSettings.value = false
-}
+  currentPage.value = "home";
+  selectedCharacter.value = null;
+  showSettings.value = false;
+};
 
 const goToSelectCharacter = (character) => {
-  currentPage.value = "selectCharacter"
-  selectedCharacter.value = null
-  currentBoss.value = 0
-  showSettings.value = false
-  turn.value = 1
-  heroHp.value = character.hp
-  heroMaxHp.value = character.hp
-  heroSta.value = character.sta
-  heroMaxSta.value = character.sta
-  bossMaxHp.value = bossCharacters[currentBoss.value].hp
-  bossHp.value = bossMaxHp.value
-}
+  currentPage.value = "selectCharacter";
+  selectedCharacter.value = null;
+  currentBoss.value = 0;
+  showSettings.value = false;
+  turn.value = 1;
+  heroHp.value = character.hp;
+  heroMaxHp.value = character.hp;
+  heroSta.value = character.sta;
+  heroMaxSta.value = character.sta;
+  bossMaxHp.value = bossCharacters[currentBoss.value].hp;
+  bossHp.value = bossMaxHp.value;
+};
 
 const toggleSettings = () => {
-  showSettings.value = !showSettings.value
-}
+  showSettings.value = !showSettings.value;
+};
 
 const selectCharacter = (character) => {
-  selectedCharacter.value = character
-  turn.value = 1
-  heroHp.value = character.hp
-  heroMaxHp.value = character.hp
-  heroSta.value = character.sta
-  heroMaxSta.value = character.sta
-  bossMaxHp.value = bossCharacters[currentBoss.value].hp
-  bossHp.value = bossMaxHp.value
-}
+  selectedCharacter.value = character;
+  turn.value = 1;
+  heroHp.value = character.hp;
+  heroMaxHp.value = character.hp;
+  heroSta.value = character.sta;
+  heroMaxSta.value = character.sta;
+  bossMaxHp.value = bossCharacters[currentBoss.value].hp;
+  bossHp.value = bossMaxHp.value;
+};
 
 const goToGamePlay = () => {
   if (selectedCharacter.value) {
-    currentPage.value = "gamePlay"
-    showSettings.value = false
+    currentPage.value = "gamePlay";
+    showSettings.value = false;
   }
-}
+};
+const skillBoss = () => {
+  const damageToBoss = selectedCharacter.value.skill;
+  bossHp.value = Math.max(0, bossHp.value - damageToBoss);
+  disableSkillTurn.value = turn.value + 2;
+  enableSkill.value = true;
+  isBossTurn.value = true;
+  heroSta.value = Math.max(0,heroSta.value - selectedCharacter?.value.skillUsage
+  );
+  setTimeout(() => {
+    attackHero();
+  }, 1500);
 
+  if (bossHp.value === 0) {
+    currentBoss.value += 1;
+    if (currentBoss.value < bossCharacters.length) {
+      bossMaxHp.value = bossCharacters[currentBoss.value].hp;
+      bossHp.value = bossMaxHp.value;
+
+      heroHp.value = selectedCharacter.value.hp;
+      heroMaxHp.value = selectedCharacter.value.hp;
+      heroSta.value = selectedCharacter.value.sta;
+      heroMaxSta.value = selectedCharacter.value.sta;
+      turn.value = 1;
+
+      isBossTurn.value = false;
+    }
+  }
+};
 const attackBoss = () => {
-  const damageToBoss = selectedCharacter.value.atk
-  bossHp.value = Math.max(0, bossHp.value - damageToBoss)
-  
-  isBossTurn.value = true
+  const damageToBoss = selectedCharacter.value.atk;
+  bossHp.value = Math.max(0, bossHp.value - damageToBoss);
 
-  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage)
+  isBossTurn.value = true;
+
+  heroSta.value = Math.max(0,heroSta.value - selectedCharacter?.value.atkUsage
+  );
 
   setTimeout(() => {
-    attackHero()
-  }, 1500)
+    attackHero();
+  }, 1500);
 
-  if(bossHp.value === 0){
-    currentBoss.value += 1
+  if (bossHp.value === 0) {
+    currentBoss.value += 1;
+    enableSkill.value = false
     if (currentBoss.value < bossCharacters.length) {
+      bossMaxHp.value = bossCharacters[currentBoss.value].hp;
+      bossHp.value = bossMaxHp.value;
 
-      bossMaxHp.value = bossCharacters[currentBoss.value].hp
-      bossHp.value = bossMaxHp.value
+      heroHp.value = selectedCharacter.value.hp;
+      heroMaxHp.value = selectedCharacter.value.hp;
+      heroSta.value = selectedCharacter.value.sta;
+      heroMaxSta.value = selectedCharacter.value.sta;
+      turn.value = 1;
 
-      heroHp.value = selectedCharacter.value.hp
-      heroMaxHp.value = selectedCharacter.value.hp
-      heroSta.value = selectedCharacter.value.sta
-      heroMaxSta.value = selectedCharacter.value.sta
-      turn.value = 1
-
-      isBossTurn.value = false
-    } 
+      isBossTurn.value = false;
+    }
   }
-}
+};
 
 const attackHero = () => {
-  const damageToHero = bossCharacters[currentBoss.value].atk
-  heroHp.value = Math.max(0, heroHp.value - damageToHero)
-
-  if (heroHp.value > 0) {
-    turn.value += 1
-    isBossTurn.value = false
+  const damageToHero = bossCharacters[currentBoss.value].atk;
+  heroHp.value = Math.max(0, heroHp.value - damageToHero);
+  if(turn.value >= disableSkillTurn.value){
+    enableSkill.value = false
   }
-}
+  if (heroHp.value > 0) {
+    turn.value += 1;
+    isBossTurn.value = false;
+  }
+};
 
 </script>
 
 <template>
   <div v-if="currentPage === 'home'">
-    <div class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/images/bg/homePageBG.jpg')]">
-      <div class="bg-white/25 rounded-md absolute top-[8vw] left-[12vw] w-[40vw] h-[28vw]">
-
+    <div
+      class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/images/bg/homePageBG.jpg')]"
+    >
+      <div
+        class="bg-white/25 rounded-md absolute top-[8vw] left-[12vw] w-[40vw] h-[28vw]"
+      >
         <div class="text-center pt-[5vw] text-7xl text-white">
-          <h1 class="press-start-2p-regular pb-3">
-            Solo
-          </h1>
-          <h1 class="press-start-2p-regular">
-            Fantasy
-          </h1>
+          <h1 class="press-start-2p-regular pb-3">Solo</h1>
+          <h1 class="press-start-2p-regular">Fantasy</h1>
           <div class="flex justify-center gap-[10vw] pt-[5vw]">
-            <button @click="goToSelectCharacter" class="icon-button cursor-pointer">
-              <img src="./assets/images/element/playButton.png" style="transform: scale(3.5)" />
+            <button
+              @click="goToSelectCharacter"
+              class="icon-button cursor-pointer"
+            >
+              <img
+                src="./assets/images/element/playButton.png"
+                style="transform: scale(3.5)"
+              />
             </button>
             <button class="icon-button cursor-pointer">
-              <img src="./assets/images/element/Tutorial.png" style="transform: scale(3.5)" />
+              <img
+                src="./assets/images/element/Tutorial.png"
+                style="transform: scale(3.5)"
+              />
             </button>
           </div>
         </div>
@@ -198,37 +241,58 @@ const attackHero = () => {
 
   <div v-if="currentPage === 'selectCharacter'" class="relative">
     <div
-      class="w-screen h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center bg-[url('/src/assets/images/bg/selectCharacterBG.png')]">
-      <button @click="goToHome" class="icon-button absolute top-[3vw] left-[5vw]">
-        <img src="./assets/images/element/back.png" style="transform: scale(2)" />
+      class="w-screen h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center bg-[url('/src/assets/images/bg/selectCharacterBG.png')]"
+    >
+      <button
+        @click="goToHome"
+        class="icon-button absolute top-[3vw] left-[5vw]"
+      >
+        <img
+          src="./assets/images/element/back.png"
+          style="transform: scale(2)"
+        />
       </button>
-      <h1 class="press-start-2p text-white text-6xl relative drop-shadow-lg pt-[1vw]">
+      <h1
+        class="press-start-2p text-white text-6xl relative drop-shadow-lg pt-[1vw]"
+      >
         Select Character
       </h1>
 
       <div class="flex justify-center items-center relative gap-[5vw] pt-[3vw]">
-        <div v-for="character in characters" :key="character.class" @click="selectCharacter(character)" :class="[
+        <div
+          v-for="character in characters"
+          :key="character.class"
+          @click="selectCharacter(character)"
+          :class="[
             'character-card cursor-pointer transition-all duration-300',
             selectedCharacter?.class === character.class ? 'selected' : '',
-            selectedCharacter?.class === 'knight' && character.class === 'knight'
+            selectedCharacter?.class === 'knight' &&
+            character.class === 'knight'
               ? 'selected-knight'
               : '',
-            selectedCharacter?.class === 'archer' && character.class === 'archer'
+            selectedCharacter?.class === 'archer' &&
+            character.class === 'archer'
               ? 'selected-archer'
               : '',
             selectedCharacter?.class === 'mage' && character.class === 'mage'
               ? 'selected-mage'
               : '',
-          ]">
+          ]"
+        >
           <img :src="character.picture" :alt="character.name" />
 
-          <div style="
+          <div
+            style="
               background: rgba(255, 240, 231, 100);
               border-radius: 8px;
               padding: 12px;
               border: 2px solid #444;
-            ">
-            <h3 class="press-start-2p text-black text-sm mb-3 text-center" style="margin-bottom: 10px">
+            "
+          >
+            <h3
+              class="press-start-2p text-black text-sm mb-3 text-center"
+              style="margin-bottom: 10px"
+            >
               {{ character.name }}
             </h3>
             <div>
@@ -249,7 +313,8 @@ const attackHero = () => {
               <div class="stat-row">
                 <span class="text-black">SKILL</span>
                 <span class="text-black">
-                  {{ character.skill }}<span> (-{{ character.skillUsage }} STA)</span>
+                  {{ character.skill
+                  }}<span> (-{{ character.skillUsage }} STA)</span>
                 </span>
               </div>
             </div>
@@ -258,52 +323,83 @@ const attackHero = () => {
       </div>
 
       <div class="text-center pt-[3vw]">
-        <button @click="goToGamePlay" :disabled="!selectedCharacter" class="select-button relative">
+        <button
+          @click="goToGamePlay"
+          :disabled="!selectedCharacter"
+          class="select-button relative"
+        >
           Select
         </button>
       </div>
     </div>
   </div>
-  <div v-if="currentPage === 'gamePlay'"
-    class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/src/assets/images/bg/gamePlayBG.jpg')] press-start-2p">
+  <div
+    v-if="currentPage === 'gamePlay'"
+    class="w-screen h-screen bg-cover bg-center bg-no-repeat relative bg-[url('/src/assets/images/bg/gamePlayBG.jpg')] press-start-2p"
+  >
     <div class="absolute inset-0 bg-black/30">
-      <button @click="toggleSettings" class="icon-button absolute top-[3.5vw] left-[93vw]">
-        <img src="./assets/images/element/setting.png" style="transform: scale(2.5)" />
+      <button
+        @click="toggleSettings"
+        class="icon-button absolute top-[3.5vw] left-[93vw]"
+      >
+        <img
+          src="./assets/images/element/setting.png"
+          style="transform: scale(2.5)"
+        />
       </button>
-        <!-- boss -->
-        <div class="absolute h-100 w-90 py-7 left-185">
-             <img :src="bossCharacters[currentBoss].picture" :alt="bossCharacters[currentBoss].name" class="h-78 w-73"/>
+      <!-- boss -->
+      <div class="absolute h-100 w-90 py-7 left-185">
+        <img
+          :src="bossCharacters[currentBoss].picture"
+          :alt="bossCharacters[currentBoss].name"
+          class="h-78 w-73"
+        />
+      </div>
+      <div class="absolute w-[400px] h-[140px] top-[50px] left-[240px]">
+        <img
+          src="./assets/images/element/boxHpAndSta.png"
+          class="w-full h-full"
+        />
+        <div class="absolute top-[27px] left-[60px] text-white text-lg">
+          <span>{{ bossCharacters[currentBoss].name }}</span>
         </div>
-        <div class="absolute w-[400px] h-[140px] top-[50px] left-[240px]">
-          <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
-          <div class="absolute top-[27px] left-[60px] text-white text-lg">
-            <span>{{ bossCharacters[currentBoss].name }}</span>
-          </div>
-          <div class="absolute top-[60px] flex left-[60px] text-white text-lg">
-            <span>HP </span>
-            <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
-              <div class="h-full bg-[#FF3A3A] transition-all duration-500" :style="{ width: (bossHp / bossMaxHp * 100) + '%' }"></div>
-            </div>
-          </div>
-          <div class="absolute top-[90px] left-[130px] text-white text-md">
-            {{ bossHp }} / {{ bossMaxHp }}
+        <div class="absolute top-[60px] flex left-[60px] text-white text-lg">
+          <span>HP </span>
+          <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
+            <div
+              class="h-full bg-[#FF3A3A] transition-all duration-500"
+              :style="{ width: (bossHp / bossMaxHp) * 100 + '%' }"
+            ></div>
           </div>
         </div>
-        <!-- hero -->
-        <div class="absolute h-100 w-90 py-54 left-74">
-          <img :src="selectedCharacter?.pictureGameplay" :alt="selectedCharacter.name" class="h-80 w-75"/>
+        <div class="absolute top-[90px] left-[130px] text-white text-md">
+          {{ bossHp }} / {{ bossMaxHp }}
         </div>
-        <div class="absolute w-[400px] h-[140px] top-[50px] left-[220px]">
-          <div class="absolute w-[570px] h-[170px] top-[300px] left-[630px]"> 
-            <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
+      </div>
+      <!-- hero -->
+      <div class="absolute h-100 w-90 py-54 left-74">
+        <img
+          :src="selectedCharacter?.pictureGameplay"
+          :alt="selectedCharacter.name"
+          class="h-80 w-75"
+        />
+      </div>
+      <div class="absolute w-[400px] h-[140px] top-[50px] left-[220px]">
+        <div class="absolute w-[570px] h-[170px] top-[300px] left-[630px]">
+          <img
+            src="./assets/images/element/boxHpAndSta.png"
+            class="w-full h-full"
+          />
           <div class="absolute top-[40px] left-[60px] text-white text-lg">
             <span>{{ selectedCharacter?.name }}</span>
           </div>
           <div class="absolute top-[80px] flex left-[40px] text-white text-lg">
             <span>HP</span>
             <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
-              <div class="h-full bg-[#FF3A3A] transition-all duration-500"
-                :style="{ width: (heroHp / heroMaxHp * 100) + '%' }"></div>
+              <div
+                class="h-full bg-[#FF3A3A] transition-all duration-500"
+                :style="{ width: (heroHp / heroMaxHp) * 100 + '%' }"
+              ></div>
             </div>
           </div>
           <div class="absolute top-[110px] left-[115px] text-white text-md">
@@ -312,8 +408,10 @@ const attackHero = () => {
           <div class="absolute top-[80px] flex right-[30px] text-white text-lg">
             <span>STA</span>
             <div class="w-50 h-6 bg-gray-700 relative overflow-hidden">
-              <div class="h-full bg-[#3ab7ff] transition-all duration-500"
-                :style="{ width: (heroSta / heroMaxSta * 100) + '%' }"></div>
+              <div
+                class="h-full bg-[#3ab7ff] transition-all duration-500"
+                :style="{ width: (heroSta / heroMaxSta) * 100 + '%' }"
+              ></div>
             </div>
           </div>
           <div class="absolute top-[110px] right-[60px] text-white text-md">
@@ -321,8 +419,12 @@ const attackHero = () => {
           </div>
         </div>
       </div>
-      <div class="fixed bottom-0 left-0 w-full h-52 bg-white/60 flex text-black">
-        <div class="flex-1 flex items-center justify-center border-r-2 border-black">
+      <div
+        class="fixed bottom-0 left-0 w-full h-52 bg-white/60 flex text-black"
+      >
+        <div
+          class="flex-1 flex items-center justify-center border-r-2 border-black"
+        >
           <div class="absolute top-5 left-5 flex gap-2 z-50">
             <div class="bg-white px-4 py-2 border-2 border-black">
               <p>Stage {{ bossCharacters[currentBoss].class }}</p>
@@ -337,15 +439,49 @@ const attackHero = () => {
             <div class="flex flex-col py-7 items-center justify-center">
               <p class="text-2xl pb-3">ATK</p>
               <div class="relative w-27 h-27">
-                <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md " />
-                <button @click="attackBoss" :disabled="isBossTurn" class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer" :class="{'opacity-50 cursor-not-allowed': isBossTurn}">
-                  <img v-if="selectedCharacter" :src="selectedCharacter.atkPicture" class="w-full h-full object-contain" />
+                <img
+                  src="./assets/images/playerAction/itemBox.png"
+                  class="w-full h-full object-cover shadow-md"
+                />
+                <button
+                  @click="attackBoss"
+                  :disabled="isBossTurn"
+                  class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  :class="{ 'opacity-50 cursor-not-allowed': isBossTurn }"
+                >
+                  <img
+                    v-if="selectedCharacter"
+                    :src="selectedCharacter.atkPicture"
+                    class="w-full h-full object-contain"
+                  />
                 </button>
               </div>
             </div>
           </div>
           <div class="flex-1 flex justify-center border-r h-full">
-            <p class="py-7 text-2xl">SKILL</p>
+            <div class="flex flex-col py-7 items-center justify-center">
+              <p class="pb-3 text-2xl">SKILL</p>
+              <div class="relative w-27 h-27">
+                <img
+                  src="./assets/images/playerAction/itemBox.png"
+                  class="w-full h-full object-cover shadow-md"
+                />
+                <button
+                  @click="skillBoss"
+                  :disabled="isBossTurn || enableSkill"
+                  class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  :class="{
+                    'opacity-50 cursor-not-allowed': isBossTurn || enableSkill,
+                  }"
+                >
+                  <img
+                    v-if="selectedCharacter"
+                    :src="selectedCharacter.skillPicture"
+                    class="w-full h-full object-contain"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
           <div class="flex-1 flex justify-center h-full">
             <p class="py-7 text-2xl">POTION</p>
@@ -355,10 +491,18 @@ const attackHero = () => {
     </div>
   </div>
 
-  <div v-if="showSettings" class="settings-modal fixed inset-0 flex items-center justify-center z-50">
+  <div
+    v-if="showSettings"
+    class="settings-modal fixed inset-0 flex items-center justify-center z-50"
+  >
     <div class="settings-panel-container relative">
-      <img src="./assets/images/element/settingBox.png" class="settings-box-bg w-[280px] h-[320px] object-contain" />
-      <div class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4">
+      <img
+        src="./assets/images/element/settingBox.png"
+        class="settings-box-bg w-[280px] h-[320px] object-contain"
+      />
+      <div
+        class="settings-content absolute inset-0 flex flex-col items-center justify-center p-4"
+      >
         <h1 class="press-start-2p text-white text-3xl text-center pb-[2vw]">
           Setting
         </h1>
@@ -367,14 +511,20 @@ const attackHero = () => {
             <button @click="toggleSettings" class="icon-button">
               <div class="Play">
                 <div class="icon-content">
-                  <img src="./assets/images/element/playButton.png" style="transform: scale(2.5)" />
+                  <img
+                    src="./assets/images/element/playButton.png"
+                    style="transform: scale(2.5)"
+                  />
                 </div>
               </div>
             </button>
             <button @click="goToSelectCharacter" class="icon-button">
               <div class="Back">
                 <div class="icon-content">
-                  <img src="./assets/images/element/playAgain.png" style="transform: scale(2.5)" />
+                  <img
+                    src="./assets/images/element/playAgain.png"
+                    style="transform: scale(2.5)"
+                  />
                 </div>
               </div>
             </button>
@@ -384,7 +534,10 @@ const attackHero = () => {
             <button @click="goToHome" class="icon-button">
               <div class="Home">
                 <div class="icon-content">
-                  <img src="./assets/images/element/home.png" style="transform: scale(2.5)" />
+                  <img
+                    src="./assets/images/element/home.png"
+                    style="transform: scale(2.5)"
+                  />
                 </div>
               </div>
             </button>
@@ -393,7 +546,6 @@ const attackHero = () => {
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -415,7 +567,8 @@ const attackHero = () => {
 
 .character-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgb(255, 255, 255), inset 0 2px 14px rgb(255, 255, 255);
+  box-shadow: 0 12px 24px rgb(255, 255, 255),
+    inset 0 2px 14px rgb(255, 255, 255);
 }
 
 .character-card.selected-knight {
@@ -473,7 +626,7 @@ const attackHero = () => {
 }
 
 .settings-modal {
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .settings-panel-container {
@@ -489,11 +642,9 @@ const attackHero = () => {
 
 .settings-panel {
   width: 300px;
-  background: #8B4513;
+  background: #8b4513;
   border: 8px solid #654321;
-  box-shadow:
-    inset 0 0 10px rgba(0,0,0,0.5),
-    0 0 20px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .icon-button {
@@ -517,7 +668,7 @@ const attackHero = () => {
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
 }
 
 .stroke-black {
