@@ -88,34 +88,44 @@ const characters = [
   },
 ]
 const goToHome = () => {
-  currentPage.value = "home";
-  selectedCharacter.value = null;
-  showSettings.value = false;
+  currentPage.value = "home"
+  selectedCharacter.value = null
+  showSettings.value = false
 }
 
-const goToSelectCharacter = () => {
-  currentPage.value = "selectCharacter";
-  showSettings.value = false;
+const goToSelectCharacter = (character) => {
+  currentPage.value = "selectCharacter"
+  selectedCharacter.value = null
+  currentBoss.value = 0
+  showSettings.value = false
+  turn.value = 1
+  heroHp.value = character.hp
+  heroMaxHp.value = character.hp
+  heroSta.value = character.sta
+  heroMaxSta.value = character.sta
+  bossMaxHp.value = bossCharacters[currentBoss.value].hp
+  bossHp.value = bossMaxHp.value
 }
 
 const toggleSettings = () => {
-  showSettings.value = !showSettings.value;
+  showSettings.value = !showSettings.value
 }
 
 const selectCharacter = (character) => {
-  selectedCharacter.value = character;
-  heroHp.value = character.hp;
-  heroMaxHp.value = character.hp;
-  heroSta.value = character.sta;
-  heroMaxSta.value = character.sta;
-  bossMaxHp.value = bossCharacters[currentBoss.value].hp;
-  bossHp.value = bossMaxHp.value;
+  selectedCharacter.value = character
+  turn.value = 1
+  heroHp.value = character.hp
+  heroMaxHp.value = character.hp
+  heroSta.value = character.sta
+  heroMaxSta.value = character.sta
+  bossMaxHp.value = bossCharacters[currentBoss.value].hp
+  bossHp.value = bossMaxHp.value
 }
 
 const goToGamePlay = () => {
   if (selectedCharacter.value) {
-    currentPage.value = "gamePlay";
-    showSettings.value = false;
+    currentPage.value = "gamePlay"
+    showSettings.value = false
   }
 }
 
@@ -242,7 +252,6 @@ const attackHero = () => {
                   {{ character.skill }}<span> (-{{ character.skillUsage }} STA)</span>
                 </span>
               </div>
-
             </div>
           </div>
         </div>
@@ -261,9 +270,11 @@ const attackHero = () => {
       <button @click="toggleSettings" class="icon-button absolute top-[3.5vw] left-[93vw]">
         <img src="./assets/images/element/setting.png" style="transform: scale(2.5)" />
       </button>
-      <div class="absolute w-[400px] h-[140px] top-[50px] left-[300px]">
         <!-- boss -->
-        <div>
+        <div class="absolute h-100 w-90 py-7 left-185">
+             <img :src="bossCharacters[currentBoss].picture" :alt="bossCharacters[currentBoss].name" class="h-78 w-73"/>
+        </div>
+        <div class="absolute w-[400px] h-[140px] top-[50px] left-[240px]">
           <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
           <div class="absolute top-[27px] left-[60px] text-white text-lg">
             <span>{{ bossCharacters[currentBoss].name }}</span>
@@ -279,10 +290,10 @@ const attackHero = () => {
           </div>
         </div>
         <!-- hero -->
-        <div>
-          <div class="h-55 w-78 py-6">
-            <img :src="selectedCharacter?.pictureGameplay" alt="picture"/>
-          </div>
+        <div class="absolute h-100 w-90 py-54 left-74">
+          <img :src="selectedCharacter?.pictureGameplay" :alt="selectedCharacter.name" class="h-80 w-75"/>
+        </div>
+        <div class="absolute w-[400px] h-[140px] top-[50px] left-[220px]">
           <div class="absolute w-[570px] h-[170px] top-[300px] left-[630px]"> 
             <img src="./assets/images/element/boxHpAndSta.png" class="w-full h-full">
           <div class="absolute top-[40px] left-[60px] text-white text-lg">
@@ -309,7 +320,6 @@ const attackHero = () => {
             {{ heroSta }} / {{ heroMaxSta }}
           </div>
         </div>
-      </div>
       </div>
       <div class="fixed bottom-0 left-0 w-full h-52 bg-white/60 flex text-black">
         <div class="flex-1 flex items-center justify-center border-r-2 border-black">
