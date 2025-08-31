@@ -18,6 +18,9 @@ const disableSkillTurn = ref(0);
 
 const turn = ref(1);
 const isBossTurn = ref(false);
+//เพิ่มตัวแปร potion
+const potionCount = ref(3);
+const potionSta = 30;
 
 const bossCharacters = [
   {
@@ -92,10 +95,12 @@ const characters = [
     skillPicture: "/images/playerAction/magician_skill.png",
   },
 ];
+
 const goToHome = () => {
   currentPage.value = "home";
   selectedCharacter.value = null;
   showSettings.value = false;
+  potionCount.value = 3;
 };
 
 const goToSelectCharacter = (character) => {
@@ -110,6 +115,8 @@ const goToSelectCharacter = (character) => {
   heroMaxSta.value = character.sta;
   bossMaxHp.value = bossCharacters[currentBoss.value].hp;
   bossHp.value = bossMaxHp.value;
+  potionCount.value = 3;
+  enableSkill.value = false;
 };
 
 const toggleSettings = () => {
@@ -125,12 +132,15 @@ const selectCharacter = (character) => {
   heroMaxSta.value = character.sta;
   bossMaxHp.value = bossCharacters[currentBoss.value].hp;
   bossHp.value = bossMaxHp.value;
+  potionCount.value = 3;
+  enableSkill.value = false; 
 };
 
 const goToGamePlay = () => {
   if (selectedCharacter.value) {
     currentPage.value = "gamePlay";
     showSettings.value = false;
+    enableSkill.value = false; 
   }
 };
 const skillBoss = () => {
@@ -139,14 +149,14 @@ const skillBoss = () => {
   disableSkillTurn.value = turn.value + 2;
   enableSkill.value = true;
   isBossTurn.value = true;
-  heroSta.value = Math.max(0,heroSta.value - selectedCharacter?.value.skillUsage
-  );
+  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.skillUsage);
   setTimeout(() => {
     attackHero();
   }, 1500);
 
   if (bossHp.value === 0) {
     currentBoss.value += 1;
+    enableSkill.value = false;
     if (currentBoss.value < bossCharacters.length) {
       bossMaxHp.value = bossCharacters[currentBoss.value].hp;
       bossHp.value = bossMaxHp.value;
@@ -167,8 +177,7 @@ const attackBoss = () => {
 
   isBossTurn.value = true;
 
-  heroSta.value = Math.max(0,heroSta.value - selectedCharacter?.value.atkUsage
-  );
+  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage);
 
   setTimeout(() => {
     attackHero();
@@ -176,7 +185,7 @@ const attackBoss = () => {
 
   if (bossHp.value === 0) {
     currentBoss.value += 1;
-    enableSkill.value = false
+    enableSkill.value = false;
     if (currentBoss.value < bossCharacters.length) {
       bossMaxHp.value = bossCharacters[currentBoss.value].hp;
       bossHp.value = bossMaxHp.value;
@@ -191,19 +200,32 @@ const attackBoss = () => {
     }
   }
 };
+//เพิ่ม function potion
+const usePotion = () => {
+  if (potionCount.value > 0) {
+    potionCount.value -= 1;
+    const healAmount = heroMaxHp.value * 0.4;
+    heroHp.value = Math.min(heroMaxHp.value, heroHp.value + healAmount);
+    heroSta.value = Math.min(heroMaxSta.value, heroSta.value + potionSta);
+
+    isBossTurn.value = true;
+    setTimeout(() => {
+      attackHero();
+    }, 1500);
+  }
+};
 
 const attackHero = () => {
   const damageToHero = bossCharacters[currentBoss.value].atk;
   heroHp.value = Math.max(0, heroHp.value - damageToHero);
-  if(turn.value >= disableSkillTurn.value){
-    enableSkill.value = false
+  if (turn.value >= disableSkillTurn.value) {
+    enableSkill.value = false;
   }
   if (heroHp.value > 0) {
     turn.value += 1;
     isBossTurn.value = false;
   }
 };
-
 </script>
 
 <template>
@@ -347,7 +369,6 @@ const attackHero = () => {
           style="transform: scale(2.5)"
         />
       </button>
-      <!-- boss -->
       <div class="absolute h-100 w-90 py-7 left-185">
         <img
           :src="bossCharacters[currentBoss].picture"
@@ -376,7 +397,6 @@ const attackHero = () => {
           {{ bossHp }} / {{ bossMaxHp }}
         </div>
       </div>
-      <!-- hero -->
       <div class="absolute h-100 w-90 py-54 left-74">
         <img
           :src="selectedCharacter?.pictureGameplay"
@@ -483,8 +503,35 @@ const attackHero = () => {
               </div>
             </div>
           </div>
+          // เพิ่ม potion
           <div class="flex-1 flex justify-center h-full">
-            <p class="py-7 text-2xl">POTION</p>
+            <div class="flex flex-col py-7 items-center justify-center">
+              <p class="pb-3 text-2xl">POTION</p>
+              <div class="relative w-27 h-27">
+                <img
+                  src="./assets/images/playerAction/itemBox.png"
+                  class="w-full h-full object-cover shadow-md"
+                />
+                <button
+                  @click="usePotion"
+                  :disabled="isBossTurn || potionCount === 0"
+                  class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  :class="{
+                    'opacity-50 cursor-not-allowed': isBossTurn || potionCount === 0,
+                  }"
+                >
+                  <img
+                    src="./assets/images/playerAction/potion.png"
+                    class="w-full h-full object-contain"
+                  />
+                  <div
+                    class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm border-2 border-black"
+                  >
+                    {{ potionCount }}
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
