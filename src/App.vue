@@ -188,21 +188,8 @@ const skillBoss = () => {
   }, 1500);
 
   if (bossHp.value === 0) {
-    currentBoss.value += 1;
     enableSkill.value = false;
     showWinning.value = true;
-    if (currentBoss.value < bossCharacters.length) {
-      bossMaxHp.value = bossCharacters[currentBoss.value].hp;
-      bossHp.value = bossMaxHp.value;
-
-      heroHp.value = selectedCharacter.value.hp;
-      heroMaxHp.value = selectedCharacter.value.hp;
-      heroSta.value = selectedCharacter.value.sta;
-      heroMaxSta.value = selectedCharacter.value.sta;
-      turn.value = 1;
-
-      isBossTurn.value = false;
-    }
   }
 };
 
@@ -210,7 +197,6 @@ const attackBoss = () => {
   const damageToBoss = selectedCharacter.value.atk;
   bossHp.value = Math.max(0, bossHp.value - damageToBoss);
   isBossTurn.value = true;
-
   heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage);
 
   addLog(
@@ -222,21 +208,8 @@ const attackBoss = () => {
   }, 1500);
 
   if (bossHp.value === 0) {
-    currentBoss.value += 1;
     enableSkill.value = false;
     showWinning.value = true;
-    if (currentBoss.value < bossCharacters.length) {
-      bossMaxHp.value = bossCharacters[currentBoss.value].hp;
-      bossHp.value = bossMaxHp.value;
-
-      heroHp.value = selectedCharacter.value.hp;
-      heroMaxHp.value = selectedCharacter.value.hp;
-      heroSta.value = selectedCharacter.value.sta;
-      heroMaxSta.value = selectedCharacter.value.sta;
-      turn.value = 1;
-
-      isBossTurn.value = false;
-    }
   }
 };
 
@@ -262,7 +235,7 @@ const attackHero = () => {
   if (bossHp.value === 0 || showWinning.value) return;
   const damageToHero = bossCharacters[currentBoss.value].atk;
   heroHp.value = Math.max(0, heroHp.value - damageToHero);
-
+  
   addLog(
     `${bossCharacters[currentBoss.value].name} strikes ${selectedCharacter.value?.name}, Deals ${damageToHero}`
   );
