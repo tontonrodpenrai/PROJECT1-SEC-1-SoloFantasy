@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 
 const currentPage = ref("home");
+const showTutorial = ref(false);
 const showSettings = ref(false);
 const showWinning = ref(false);
 const showLosing = ref(false);
@@ -102,6 +103,38 @@ const goToHome = () => {
   showWinning.value = false;
   potionCount.value = 3;
   resetLog();
+};
+
+const toggleTutorial = () => {
+  showTutorial.value = !showTutorial.value;
+};
+
+const tutorialSteps = [
+  "/src/assets/tutorial/text.png",
+  "/src/assets/tutorial/selectCharacters.png",
+  "/src/assets/tutorial/stage.png",
+  "/src/assets/tutorial/menu.png",
+  "/src/assets/tutorial/nextStage.png",
+  "/src/assets/tutorial/lose.png",
+  "/src/assets/tutorial/win.png",
+];
+
+const currentStep = ref(0);
+
+const nextStep = () => {
+  if (currentStep.value < tutorialSteps.length - 1) {
+    currentStep.value += 1;
+  } else {
+    // ถึงขั้นสุดท้ายก็ปิด tutorial
+    showTutorial.value = false;
+    currentStep.value = 0; 
+  }
+};
+
+const prevStep = () => {
+  if (currentStep.value > 0) {
+    currentStep.value -= 1;
+  }
 };
 
 const goToSelectCharacter = (character) => {
@@ -288,11 +321,47 @@ const resetLog = () => {
             <button @click="goToSelectCharacter" class="icon-button cursor-pointer">
               <img src="./assets/images/element/playButton.png" style="transform: scale(3.5)" />
             </button>
-            <button class="icon-button cursor-pointer">
+            <button @click="toggleTutorial" class="icon-button cursor-pointer">
               <img src="./assets/images/element/Tutorial.png" style="transform: scale(3.5)" />
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tutorial Popup -->
+  <div v-if="showTutorial" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+    <!-- กล่องหลัก Tutorial -->
+    <div class="relative w-[800px] h-[500px] rounded-lg p-6 flex flex-col items-center justify-start"
+        style="border: 4px solid #BF6F4A; background-color: #8A4836;">
+      
+      <!-- ปุ่ม Home (ปิด Tutorial) -->
+      <button @click="toggleTutorial" class="icon-button absolute top-4 right-4">
+        <img src="./assets/images/element/home.png" style="transform: scale(2)" />
+      </button>
+
+      <!-- หัวข้อ -->
+      <h1 class="press-start-2p text-white text-4xl mb-4">Tutorial</h1>
+
+      <!-- กรอบเนื้อหา -->
+      <div class="w-[560px] h-[400px] bg-white/20 rounded-md flex items-center justify-center relative">
+        <!-- รูป tutorial ปัจจุบัน -->
+        <img :src="tutorialSteps[currentStep]" class="max-w-full max-h-full object-contain" />
+
+        <!-- Previous button -->
+        <button v-if="currentStep > 0" @click="prevStep"
+                class="absolute left-[-16%] top-1/2 -translate-y-1/2 icon-button">
+          <img src="./assets/images/element/playButton.png" class="rotate-180 w-16 h-16" />
+        </button>
+
+        <!-- Next button -->
+        <button @click="nextStep"
+                class="absolute right-[-16%] top-1/2 -translate-y-1/2 icon-button">
+          <img v-if="currentStep < tutorialSteps.length - 1"
+              src="./assets/images/element/playButton.png" class="w-16 h-16" />
+          <span v-else class="text-white text-lg"></span>
+        </button>
       </div>
     </div>
   </div>
