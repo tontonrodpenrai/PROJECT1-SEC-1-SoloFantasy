@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 const currentPage = ref("home");
 const showTutorial = ref(false);
@@ -335,8 +335,8 @@ const resetLog = () => {
 
   <div v-if="showTutorial" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
     <div class="relative w-[900px] h-[600px] rounded-lg p-6 flex flex-col items-center justify-start"
-        style="border: 4px solid #BF6F4A; background-color: #8A4836;">
-      
+      style="border: 4px solid #BF6F4A; background-color: #8A4836;">
+
       <button @click="toggleTutorial" class="icon-button close-btn absolute top-0 right-0">
         <img src="./assets/images/element/close.png" />
       </button>
@@ -347,14 +347,13 @@ const resetLog = () => {
         <img :src="tutorialSteps[currentStep]" class="max-w-full max-h-full object-contain" />
 
         <button v-if="currentStep > 0" @click="prevStep"
-                class="absolute left-[-14%] top-1/2 -translate-y-1/2 icon-button">
+          class="absolute left-[-14%] top-1/2 -translate-y-1/2 icon-button">
           <img src="./assets/images/element/playButton.png" class="rotate-180 w-17 h-17" />
         </button>
 
-        <button @click="nextStep"
-                class="absolute right-[-14%] top-1/2 -translate-y-1/2 icon-button">
-          <img v-if="currentStep < tutorialSteps.length - 1"
-              src="./assets/images/element/playButton.png" class="w-17 h-17" />
+        <button @click="nextStep" class="absolute right-[-14%] top-1/2 -translate-y-1/2 icon-button">
+          <img v-if="currentStep < tutorialSteps.length - 1" src="./assets/images/element/playButton.png"
+            class="w-17 h-17" />
           <span v-else class="text-white text-lg"></span>
         </button>
       </div>
@@ -612,7 +611,8 @@ const resetLog = () => {
         <h1 class="press-start-2p text-green-500 text-3xl text-center pb-[1vw]">
           Win
         </h1>
-        <div class="flex flex-row items-center justify-center">
+        <div class="flex flex-row items-center justify-center"
+          :class="{ 'gap-6': currentBoss === bossCharacters.length - 1 }">
           <div class="w-[80px] h-[80px]">
             <button @click="goToHome" class="icon-button">
               <img src="./assets/images/element/home.png" class="w-[80px] h-[80px]" />
@@ -625,7 +625,7 @@ const resetLog = () => {
             </button>
           </div>
 
-          <div class="w-[80px] h-[80px]">
+          <div v-if="currentBoss < bossCharacters.length - 1" class="w-[80px] h-[80px]">
             <button @click="goToNextStage" class="icon-button">
               <img src="./assets/images/element/next.png" class="w-[80px] h-[80px]" />
             </button>
@@ -645,7 +645,7 @@ const resetLog = () => {
         <h1 class="press-start-2p text-red-500 text-3xl text-center pb-[1vw]">
           Lose
         </h1>
-        <div class="flex flex-row items-center justify-center gap-8">
+        <div class="flex flex-row items-center justify-center gap-6">
           <div class="w-[80px] h-[80px]">
             <button @click="goToHome" class="icon-button">
               <img src="./assets/images/element/home.png" class="w-[80px] h-[80px]" />
