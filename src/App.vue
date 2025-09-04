@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 
 const currentPage = ref("home");
 const showTutorial = ref(false);
+const currentStep = ref(0);
 const showSettings = ref(false);
 const showWinning = ref(false);
 const showLosing = ref(false);
@@ -107,25 +108,26 @@ const goToHome = () => {
 
 const toggleTutorial = () => {
   showTutorial.value = !showTutorial.value;
+  if (!showTutorial.value) {
+    currentStep.value = 0;
+  }
 };
 
-const tutorialSteps = [
-  "/src/assets/tutorial/text.png",
-  "/src/assets/tutorial/selectCharacters.png",
-  "/src/assets/tutorial/stage.png",
-  "/src/assets/tutorial/menu.png",
-  "/src/assets/tutorial/nextStage.png",
-  "/src/assets/tutorial/lose.png",
-  "/src/assets/tutorial/win.png",
-];
 
-const currentStep = ref(0);
+const tutorialSteps = [
+  "/images/tutorial/text.png",
+  "/images/tutorial/selectCharacters.png",
+  "/images/tutorial/stage.png",
+  "/images/tutorial/menu.png",
+  "/images/tutorial/nextStage.png",
+  "/images/tutorial/lose.png",
+  "/images/tutorial/win.png",
+];
 
 const nextStep = () => {
   if (currentStep.value < tutorialSteps.length - 1) {
     currentStep.value += 1;
   } else {
-    // ถึงขั้นสุดท้ายก็ปิด tutorial
     showTutorial.value = false;
     currentStep.value = 0; 
   }
@@ -153,6 +155,7 @@ const goToSelectCharacter = (character) => {
   bossHp.value = bossMaxHp.value;
   potionCount.value = 3;
   enableSkill.value = false;
+  isBossTurn.value = false;
   resetLog();
 };
 
@@ -330,36 +333,28 @@ const resetLog = () => {
     </div>
   </div>
 
-  <!-- Tutorial Popup -->
   <div v-if="showTutorial" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-    <!-- กล่องหลัก Tutorial -->
-    <div class="relative w-[800px] h-[500px] rounded-lg p-6 flex flex-col items-center justify-start"
+    <div class="relative w-[900px] h-[600px] rounded-lg p-6 flex flex-col items-center justify-start"
         style="border: 4px solid #BF6F4A; background-color: #8A4836;">
       
-      <!-- ปุ่ม Home (ปิด Tutorial) -->
-      <button @click="toggleTutorial" class="icon-button absolute top-4 right-4">
-        <img src="./assets/images/element/home.png" style="transform: scale(2)" />
+      <button @click="toggleTutorial" class="icon-button close-btn absolute top-0 right-0">
+        <img src="./assets/images/element/close.png" />
       </button>
 
-      <!-- หัวข้อ -->
       <h1 class="press-start-2p text-white text-4xl mb-4">Tutorial</h1>
 
-      <!-- กรอบเนื้อหา -->
-      <div class="w-[560px] h-[400px] bg-white/20 rounded-md flex items-center justify-center relative">
-        <!-- รูป tutorial ปัจจุบัน -->
+      <div class="w-[655px] h-[490px] bg-white/20 rounded-md flex items-center justify-center relative">
         <img :src="tutorialSteps[currentStep]" class="max-w-full max-h-full object-contain" />
 
-        <!-- Previous button -->
         <button v-if="currentStep > 0" @click="prevStep"
-                class="absolute left-[-16%] top-1/2 -translate-y-1/2 icon-button">
-          <img src="./assets/images/element/playButton.png" class="rotate-180 w-16 h-16" />
+                class="absolute left-[-14%] top-1/2 -translate-y-1/2 icon-button">
+          <img src="./assets/images/element/playButton.png" class="rotate-180 w-17 h-17" />
         </button>
 
-        <!-- Next button -->
         <button @click="nextStep"
-                class="absolute right-[-16%] top-1/2 -translate-y-1/2 icon-button">
+                class="absolute right-[-14%] top-1/2 -translate-y-1/2 icon-button">
           <img v-if="currentStep < tutorialSteps.length - 1"
-              src="./assets/images/element/playButton.png" class="w-16 h-16" />
+              src="./assets/images/element/playButton.png" class="w-17 h-17" />
           <span v-else class="text-white text-lg"></span>
         </button>
       </div>
@@ -791,6 +786,12 @@ const resetLog = () => {
   justify-content: center;
   font-size: 24px;
   box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.close-btn img {
+  width: 100px;
+  height: 95px;
+  transform: none;
 }
 
 .stroke-black {
