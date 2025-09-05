@@ -38,7 +38,6 @@ const bossCharacters = [
     name: "The Cursed Armor",
     hp: 300,
     atk: 20,
-    specialAtk: 25,
     picture: "/images/character/bossStage2.png",
   },
   {
@@ -46,7 +45,6 @@ const bossCharacters = [
     name: "The Lich",
     hp: 500,
     atk: 35,
-    specialAtk: 55,
     picture: "/images/character/bossStage3.png",
   },
 ];
@@ -57,10 +55,10 @@ const characters = [
     name: "The Knight",
     hp: 240,
     sta: 100,
-    atk: 35,
-    skill: 50,
-    atkUsage: 10,
-    skillUsage: 25,
+    atk: 40,
+    skill: 80,
+    atkUsage: 15,
+    skillUsage: 30,
     picture: "/images/character/knight.png",
     pictureGameplay: "/images/character/knight1.png",
     atkPicture: "/images/playerAction/knight_atk.png",
@@ -71,10 +69,10 @@ const characters = [
     name: "The Archer",
     hp: 180,
     sta: 150,
-    atk: 45,
-    skill: 80,
-    atkUsage: 25,
-    skillUsage: 40,
+    atk: 50,
+    skill: 90,
+    atkUsage: 20,
+    skillUsage: 30,
     picture: "/images/character/archer.png",
     pictureGameplay: "/images/character/archer1.png",
     atkPicture: "/images/playerAction/archer_atk.png",
@@ -85,10 +83,10 @@ const characters = [
     name: "The Magician",
     hp: 200,
     sta: 200,
-    atk: 15,
-    skill: 100,
-    atkUsage: 10,
-    skillUsage: 60,
+    atk: 30,
+    skill: 110,
+    atkUsage: 15,
+    skillUsage: 55,
     picture: "/images/character/magician.png",
     pictureGameplay: "/images/character/magician1.png",
     atkPicture: "/images/playerAction/magician_atk.png",
@@ -283,9 +281,7 @@ const attackHero = () => {
   if (heroHp.value > 0) {
     turn.value += 1;
     isBossTurn.value = false;
-    if (heroSta.value < selectedCharacter.value.atkUsage && heroSta.value < selectedCharacter.value.skillUsage &&
-        potionCount.value === 0
-    ) {
+    if (heroSta.value < selectedCharacter.value.atkUsage && heroSta.value < selectedCharacter.value.skillUsage && potionCount.value === 0) {
         showLosing.value = true;
     }
   } else {
