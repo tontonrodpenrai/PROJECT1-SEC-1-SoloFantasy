@@ -33,13 +33,19 @@
 คำอธิบาย: ข้อความแสดง action ต่างๆของผู้เล่นและ Boss แบบต่อเนื่องเรียลไทม์
 
 # คู่มือการเล่นเกม SoloFantacy
-![HomeExplain](/images/tutorial/text.png)
-![SelectCharExplain](/images/tutorial/selectCharacters.png)
-![GameplayExplain](/images/tutorial/stage.png)
-![SettingExplain](/images/tutorial/menu.png)
-![NextStageExplain](/images/tutorial/nextStage.png)
-![LosePopup](/images/tutorial/lose.png)
-![WinPopup](/images/tutorial/win.png)
+![HomeExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/text.png)
+![SelectCharExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/selectCharacters.png)
+![GameplayExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/stage.png)
+![SettingExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/menu.png)
+![NextStageExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/nextStage.png)
+![LosePopup](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/lose.png)
+![WinPopup](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/win.png)
 
 # วีดีโอสาธิตฟีเจอร์เกม Solofantacy
 (https://drive.google.com/file/d/1f87AhqqojmX8MCkCFuisNqreT939Gq4L/view?usp=sharing)
+
+# แรงบันดาลใจในการพัฒนาแอปพลิเคชัน
+**เกมTWOM: The World of Magic** <br>
+ได้แรงบันดาลใจในส่วนของธีมเกมเป็นแฟนตาซีและภาพpixel โดยมีตัวละครที่สามารถเลือกเล่นได้ 3 คลาส: นักรบ เรนเจอร์ นักมายากล ล่าบอสมอนสเตอร์ด้วยทักษะที่หลากหลายสำหรับแต่ละคลาส
+**เกมPokemon** <br>
+ได้แรงบันดาลใจในส่วนของรูปแบบการเล่นเป็น Turn-Based สลับกันโจมตีระหว่างฝั่งตรงข้ามกับฝั่งผู้เล่น ซึ่งหน้าgame playจะจัดวางรูปแบบคล้ายคลึงกับPokemon Gen 1 ในปี 1996
