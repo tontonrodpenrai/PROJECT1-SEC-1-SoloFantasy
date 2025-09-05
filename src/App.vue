@@ -35,7 +35,7 @@ const bossCharacters = [
   },
   {
     class: "2",
-    name: "The Cured Armor",
+    name: "The Cursed Armor",
     hp: 300,
     atk: 20,
     specialAtk: 25,
@@ -102,6 +102,7 @@ const goToHome = () => {
   showSettings.value = false;
   showLosing.value = false;
   showWinning.value = false;
+  turn.value = 1;
   potionCount.value = 3;
   resetLog();
 };
@@ -112,7 +113,6 @@ const toggleTutorial = () => {
     currentStep.value = 0;
   }
 };
-
 
 const tutorialSteps = [
   "/images/tutorial/text.png",
@@ -146,13 +146,13 @@ const goToSelectCharacter = (character) => {
   showSettings.value = false;
   showLosing.value = false;
   showWinning.value = false;
-  turn.value = 1;
   heroHp.value = character.hp;
   heroMaxHp.value = character.hp;
   heroSta.value = character.sta;
   heroMaxSta.value = character.sta;
   bossMaxHp.value = bossCharacters[currentBoss.value].hp;
   bossHp.value = bossMaxHp.value;
+  turn.value = 1;
   potionCount.value = 3;
   enableSkill.value = false;
   isBossTurn.value = false;
@@ -165,7 +165,6 @@ const toggleSettings = () => {
 
 const selectCharacter = (character) => {
   selectedCharacter.value = character;
-  turn.value = 1;
   heroHp.value = character.hp;
   heroMaxHp.value = character.hp;
   heroSta.value = character.sta;
@@ -196,11 +195,11 @@ const goToNextStage = () => {
     heroSta.value = selectedCharacter.value.sta;
     heroMaxSta.value = selectedCharacter.value.sta;
 
-    turn.value = 1;
     isBossTurn.value = false;
     enableSkill.value = false;
     showWinning.value = false;
     currentPage.value = "gamePlay";
+    turn.value = 1
     resetLog();
   } else {
     goToHome();
@@ -208,6 +207,7 @@ const goToNextStage = () => {
 };
 
 const skillBoss = () => {
+  if (heroSta.value < selectedCharacter?.skillUsage) return;
   const damageToBoss = selectedCharacter.value.skill;
   bossHp.value = Math.max(0, bossHp.value - damageToBoss);
   disableSkillTurn.value = turn.value + 2;
@@ -219,33 +219,34 @@ const skillBoss = () => {
     `${selectedCharacter.value?.name} unleashes a powerful Skill!, Deals ${selectedCharacter.value.skill} damage!`
   );
 
-  setTimeout(() => {
-    attackHero();
-  }, 1500);
-
   if (bossHp.value === 0) {
     enableSkill.value = false;
     showWinning.value = true;
+  } else if (bossHp.value >= 0) {
+    setTimeout(() => {
+      attackHero();
+    }, 1500);
   }
 };
 
 const attackBoss = () => {
+  if (heroSta.value < selectedCharacter?.atkUsage) return;
   const damageToBoss = selectedCharacter.value.atk;
   bossHp.value = Math.max(0, bossHp.value - damageToBoss);
   isBossTurn.value = true;
-  heroSta.value = Math.max(0, heroSta.value - selectedCharacter?.value.atkUsage);
+  heroSta.value = Math.max(0, heroSta.value - selectedCharacter.value.atkUsage);
 
   addLog(
-    `${selectedCharacter.value?.name} attacks ${bossCharacters[currentBoss.value].name}, Deals ${damageToBoss}`
+    `${selectedCharacter.value.name} attacks ${bossCharacters[currentBoss.value].name}, Deals ${damageToBoss}`
   );
-
-  setTimeout(() => {
-    attackHero();
-  }, 1500);
 
   if (bossHp.value === 0) {
     enableSkill.value = false;
     showWinning.value = true;
+  } else if (bossHp.value >= 0) {
+    setTimeout(() => {
+      attackHero();
+    }, 1500);
   }
 };
 
@@ -282,6 +283,11 @@ const attackHero = () => {
   if (heroHp.value > 0) {
     turn.value += 1;
     isBossTurn.value = false;
+    if (heroSta.value < selectedCharacter.value.atkUsage && heroSta.value < selectedCharacter.value.skillUsage &&
+        potionCount.value === 0
+    ) {
+        showLosing.value = true;
+    }
   } else {
     showLosing.value = true;
   }
@@ -515,9 +521,9 @@ const resetLog = () => {
               <p class="text-2xl pb-3">ATK</p>
               <div class="relative w-27 h-27">
                 <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md" />
-                <button @click="attackBoss" :disabled="isBossTurn"
+                <button @click="attackBoss" :disabled="isBossTurn || heroSta < selectedCharacter?.atkUsage"
                   class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                  :class="{ 'opacity-50 cursor-not-allowed': isBossTurn }">
+                  :class="{ 'opacity-50 cursor-not-allowed': isBossTurn || heroSta < selectedCharacter?.atkUsage}">
                   <img v-if="selectedCharacter" :src="selectedCharacter.atkPicture"
                     class="w-full h-full object-contain" />
                 </button>
@@ -529,9 +535,9 @@ const resetLog = () => {
               <p class="pb-3 text-2xl">SKILL</p>
               <div class="relative w-27 h-27">
                 <img src="./assets/images/playerAction/itemBox.png" class="w-full h-full object-cover shadow-md" />
-                <button @click="skillBoss" :disabled="isBossTurn || enableSkill"
+                <button @click="skillBoss" :disabled="isBossTurn || enableSkill || heroSta < selectedCharacter?.skillUsage"
                   class="absolute top-1/2 left-1/2 w-21 h-21 -translate-x-1/2 -translate-y-1/2 cursor-pointer" :class="{
-                    'opacity-50 cursor-not-allowed': isBossTurn || enableSkill,
+                    'opacity-50 cursor-not-allowed': isBossTurn || enableSkill || heroSta < selectedCharacter?.skillUsage,
                   }">
                   <img v-if="selectedCharacter" :src="selectedCharacter.skillPicture"
                     class="w-full h-full object-contain" />
