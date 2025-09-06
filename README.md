@@ -34,7 +34,7 @@
 
 # คู่มือการเล่นเกม SoloFantacy
 ![HomeExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/text.png)
-![SelectCharExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/selectCharacters.png)
+![SelectCharExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/1228957ebadea8701ff4191bab4805d650d750a4/public/images/tutorial/selectCharacters.png)
 ![GameplayExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/stage.png)
 ![SettingExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/menu.png)
 ![NextStageExplain](https://github.com/tontonrodpenrai/PROJECT1-SEC-1-SoloFantasy/blob/4809dbbc6efefdc7f8b283e3010e6f78f51d697b/public/images/tutorial/nextStage.png)
